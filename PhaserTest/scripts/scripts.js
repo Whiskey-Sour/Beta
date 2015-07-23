@@ -10,6 +10,7 @@ function preload() {
     game.load.image('diamond', 'assets/diamond.png');
     game.load.image('firstaid','assets/firstaid.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('john-left', 'assets/john-left.png',175,230);
 }
 var platforms;
 var diamonds;
@@ -21,10 +22,10 @@ var explosion;
 
 function create() {
 
-
+    game.world.setBounds(0, 0, 1200, 600);
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
+    //game.camera.x=100;
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
 
@@ -38,7 +39,7 @@ function create() {
     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
+    ground.scale.setTo(4, 4);
 
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
@@ -67,6 +68,7 @@ function create() {
     //  Our two animations, walking left and right.
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+    player.animations.add('john-left', [0,1,2],10,true);
 
     stars = game.add.group();
     diamonds =game.add.group();
@@ -109,12 +111,14 @@ function update() {
         //  Move to the left
         player.body.velocity.x = -150;
 
-        player.animations.play('left');
+       // player.animations.play('left');
+        player.animations.play('john-left');
     }  else if (cursors.right.isDown) {
         //  Move to the right
         player.body.velocity.x = 150;
 
         player.animations.play('right');
+        //player.animations.play('john-right');
     }  else  {
         //  Stand still
         player.animations.stop();
@@ -136,8 +140,8 @@ function update() {
             lastFireTime=currentTIme;
         }
     }
-
-
+    //player.fixedToCamera=true;
+   // game.camera.x=player.x;
     game.physics.arcade.collide(stars, platforms);
 
     game.physics.arcade.overlap(diamonds, stars, collectStar, null, this);
