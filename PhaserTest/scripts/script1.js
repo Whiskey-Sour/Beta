@@ -23,7 +23,9 @@ var platforms,
     bonus,
     bots,
     bot,
-    velocityScale=175;;
+    velocityScale=175,
+    botBoundary,
+    botBoundaries;
 
 function create() {
     createWorld();
@@ -65,9 +67,11 @@ function createPlatforms(){
 
     //create group
     platforms = game.add.group();
+    botBoundaries =game.add.group();
 
     //add physics
     platforms.enableBody = true;
+    botBoundaries.enableBody=true;
 
     //addGround
     var ground = platforms.create(0, game.world.height - 64, 'ground');
@@ -91,6 +95,8 @@ function SegmentOne(){
     var ledge1 = platforms.create(400, 900 - 200, 'ground');
     ledge1.body.immovable = true;
 
+
+
     var ledge2 = platforms.create(600, 900 - 350, 'ground');
     ledge2.body.immovable = true;
     ledge2.scale.setTo(0.5,1);
@@ -101,6 +107,15 @@ function SegmentOne(){
     var ledge4 = platforms.create(500, 900 - 550, 'ground');
     ledge4.body.immovable = true;
     ledge4.scale.setTo(0.75,1);
+
+    var borderLeft=botBoundaries.create(500-200,900-580,'ground');
+    borderLeft.body.immovable = true;
+    borderLeft.scale.setTo(0.5,1);
+    borderLeft.renderable=false;
+    var borderRight=botBoundaries.create(800, 900-580,'ground');
+    borderRight.body.immovable = true;
+    borderRight.scale.setTo(0.5,1);
+    borderRight.renderable=false;
 
 
 }
@@ -142,6 +157,8 @@ function createBot(x,y){
 function createBots(){
     bots=game.add.group();
     bots.enableBody=true;
+
+
 }
 
 
@@ -203,20 +220,20 @@ function playerUpdate(){
 }
 function botsUpdate(){
     game.physics.arcade.collide(bots, platforms);
+    game.physics.arcade.collide(botBoundaries, bots);
     for(var i in bots.children){
         botUpdate(bots.children[i]);
     }
 }
 function botUpdate(bot){
     //chech for ledge
-    var dirChange=false;
-    bot.body.x=bot.body.x+bot.size*2;
 
-    if(!bot.body.touching.down){
+    if(bot.body.touching.left){
         bot.direction *=-1;
-        console.log(bot.size);
     }
-    bot.body.x=bot.body.x-bot.size*2;
+    if(bot.body.touching.right){
+        bot.direction *=-1;
+    }
     //movement
     bot.body.velocity.x= velocityScale*bot.direction;
     if(bot.body.velocity.x<=0){
