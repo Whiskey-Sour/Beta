@@ -14,25 +14,34 @@ function preload() {
     game.load.image('firstaid','assets/firstaid.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('john-left', 'assets/john-left.png',175,230);
+    game.load.spritesheet('baddie', 'assets/baddie.png', 32, 30);
 }
 
 var platforms,
     background,
     player,
+    bonus,
+    bots,
+    bot,
     velocityScale=175;;
 
 function create() {
     createWorld();
     createPlatforms();
     createPlayer();
+    createBonus();
+
+    createBot(550,900-600);
 }
 var controller,
     canJump=true;
 function update() {
     createController();
     playerUpdate();
+    botsUpdate();
     cameraUpdate();
-    console.log(player.body.gravity.y);
+    playerCollision();
+    //console.log(player.body.gravity.y);
 }
 
 function createWorld(){
@@ -69,6 +78,15 @@ function createPlatforms(){
 
 
 }
+
+function createBonus(){
+    bonus = game.add.group();
+    bonus.enableBody=true;
+
+    var codeBonus=bonus.create(700,900 - 600,'star');
+
+}
+
 function SegmentOne(){
     var ledge1 = platforms.create(400, 900 - 200, 'ground');
     ledge1.body.immovable = true;
@@ -84,16 +102,15 @@ function SegmentOne(){
     ledge4.body.immovable = true;
     ledge4.scale.setTo(0.75,1);
 
-    var wall1 = platforms.create(650, 900 - 550, 'ground');
-    wall1.body.immovable = true;
-    wall1.scale.setTo(0.2,0.5);
-    wall1.angle=270;
+
 }
+
 function createPlayer(){
     //sprite: placeHolder
     player = game.add.sprite(200, game.world.height - 150, 'dude');
     //physics
     game.physics.arcade.enable(player);
+    game.physics.arcade.collide(player, platforms);
     //gravity
     player.body.gravity.y = 500;
     player.body.collideWorldBounds = true;
@@ -101,11 +118,38 @@ function createPlayer(){
     //animation: placeHolder
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+    // additional attrbutes
+    player.lives=3;
+    player.score=0;
+
 }
+function createBot(x,y){
+    if(!bots){
+        createBots();
+    }
+    bot=game.add.sprite(x,y,'baddie');
+
+    game.physics.arcade.enable(bot);
+    //game.physics.arcade.collide(bot, platforms);
+    bot.body.gravity.y=500;
+    bot.animations.add('left',[0,1],10,true);
+    bot.animations.add('right',[2,3],10,true);
+    bot.size=32;
+    bot.direction=1;
+    bots.add(bot);
+
+}
+function createBots(){
+    bots=game.add.group();
+    bots.enableBody=true;
+}
+
+
 function createController(){
     controller=game.input.keyboard.createCursorKeys();
     controller.fire=game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
+
 function playerUpdate(){
     //collide with ground and platforms
     game.physics.arcade.collide(player, platforms);
@@ -148,7 +192,7 @@ function playerUpdate(){
     if (controller.up.isDown) {
        player.body.gravity.y=300;
     } else {
-        player.body.gravity.y=500;
+        player.body.gravity.y=700;
     }
     //resistance in x
     var speed= Math.abs(player.body.velocity.x);
@@ -157,6 +201,54 @@ function playerUpdate(){
     }
 
 }
+function botsUpdate(){
+    game.physics.arcade.collide(bots, platforms);
+    for(var i in bots.children){
+        botUpdate(bots.children[i]);
+    }
+}
+function botUpdate(bot){
+    //chech for ledge
+    var dirChange=false;
+    bot.body.x=bot.body.x+bot.size*2;
+
+    if(!bot.body.touching.down){
+        bot.direction *=-1;
+        console.log(bot.size);
+    }
+    bot.body.x=bot.body.x-bot.size*2;
+    //movement
+    bot.body.velocity.x= velocityScale*bot.direction;
+    if(bot.body.velocity.x<=0){
+        bot.animations.play('left');
+    } else{
+        bot.animations.play('right');
+    }
+
+
+
+}
+
+function playerCollision(){
+    game.physics.arcade.collide(bonus, platforms);
+    game.physics.arcade.overlap(player, bonus, collect, null, this);
+    game.physics.arcade.overlap(player, bots, die, null, this);
+
+}
+
+function collect(player,bon){
+    bon.kill();
+    player.score +=10;
+    //console.log(player.score);
+}
+
+function die(player,bot){
+    player.kill();
+    player.score +=10;
+    //console.log(player.score);
+}
+
+
 function cameraUpdate(){
 
     //keeps in the middle of the screen always
