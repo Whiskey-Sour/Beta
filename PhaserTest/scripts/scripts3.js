@@ -37,8 +37,6 @@ function create() {
     // Here we create the ground.
     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-
-
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     ground.scale.setTo(2, 2);
 
@@ -77,7 +75,6 @@ function create() {
     explosion=game.add.group();
     explosion.enableBody=true;
     //  Here we'll create 12 of them evenly spaced apart
-
     for (var i = 0; i < 12; i++) {
         //  Create a star inside of the 'stars' group
         var star = stars.create(i * 70, 0, 'star');
@@ -96,8 +93,6 @@ var canJump=true;
 var lastFireTime=0;
 var dif=0.5;
 var currentTIme;
-var fact=1;
-var emitter;
 function update() {
     currentTIme=game.time.totalElapsedSeconds();
 
@@ -108,34 +103,26 @@ function update() {
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(player, platforms);
 
-    var direction=player.body.velocity.x===0 ? 0 : ( player.body.velocity.x> 0 ? 1:-1);
-
-        //direction=player.body.velocity.x===0 ? 0:direction;
-
     player.body.velocity.x = 0;
 
     if (cursors.left.isDown) {
         //  Move to the left
         player.body.velocity.x = -150;
+
         player.animations.play('left');
     }  else if (cursors.right.isDown) {
         //  Move to the right
         player.body.velocity.x = 150;
 
         player.animations.play('right');
-    } else  {
+    }  else  {
         //  Stand still
         player.animations.stop();
 
         player.frame = 4;
     }
-
     if(player.body.touching.down && !cursors.up.isDown){
         canJump=true;
-    }
-    if(!player.body.touching.down){
-        player.body.velocity.x =150*direction;
-
     }
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down && canJump) {
@@ -164,8 +151,7 @@ function fire(player){
 }
 function collectStar (diamond, star) {
 
-    creatExplosion(star.x,star.y);
-
+    CreatExplosion(star.x,star.y);
     // Removes the star from the screen
     star.kill();
     diamond.kill();
@@ -173,20 +159,12 @@ function collectStar (diamond, star) {
 
 
 }
-function creatExplosion(xpos, ypos){
-    emitter = game.add.emitter(xpos, ypos, 2);
-    emitter.maxParticles=10;
-    emitter.makeParticles('diamond', [0, 1, 2,3,4]);
-    emitter.minParticleSpeed.setTo(-400, -400);
-    emitter.maxParticleSpeed.setTo(400, 400);
-    emitter.gravity = 0;
-    emitter.forEachAlive(function(particle)
-    {
-        particle.alpha = game.math.clamp(particle.lifespan / 2, 0, 0.5);
-    }, this);
-    emitter.start(true, 500, 0.1,2000);
-}
+function CreatExplosion(positionX,positionY){
+    var explode=diamonds.create(positionX,positionY,'firstaid');
+    explode.birth=currentTIme;
+    console.log(explode);
 
+}
 function checkForExpire(){
     var collection=diamonds.children;
     for(var i in collection){
