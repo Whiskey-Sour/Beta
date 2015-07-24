@@ -13,7 +13,7 @@ function preload() {
     game.load.image('diamond', 'assets/diamond.png');
     game.load.image('firstaid','assets/firstaid.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-    game.load.spritesheet('john-left', 'assets/john-left.png',175,230);
+    game.load.spritesheet('john', 'assets/john-short-new.png', 158.5, 225);
     game.load.spritesheet('baddie', 'assets/baddie.png', 32, 30);
 }
 
@@ -122,7 +122,7 @@ function SegmentOne(){
 
 function createPlayer(){
     //sprite: placeHolder
-    player = game.add.sprite(200, game.world.height - 150, 'dude');
+    player = game.add.sprite(200, game.world.height - 150, 'john');
     //physics
     game.physics.arcade.enable(player);
     game.physics.arcade.collide(player, platforms);
@@ -131,9 +131,11 @@ function createPlayer(){
     player.body.collideWorldBounds = true;
 
     //animation: placeHolder
-    player.animations.add('left', [0, 1, 2, 3], 10, true);
-    player.animations.add('right', [5, 6, 7, 8], 10, true);
+    player.animations.add('right', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 35, true);
+    player.animations.add('left', [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14], 35, true);
+    player.animations.add('idle', [0], 10, true);
     // additional attrbutes
+    player.scale.setTo(0.25);
     player.lives=3;
     player.score=0;
 
@@ -191,9 +193,7 @@ function playerUpdate(){
         player.animations.play('right');
     }  else  {
         //  Stand still
-        player.animations.stop();
-
-        player.frame = 4;
+        player.animations.play('idle');
     }
     //movement jump
     //prevent continuous jumping
