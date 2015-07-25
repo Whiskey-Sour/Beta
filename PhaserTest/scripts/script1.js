@@ -14,7 +14,7 @@ function preload() {
     game.load.image('firstaid','assets/firstaid.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('john', 'assets/john-short-new.png', 158.5, 225);
-    game.load.spritesheet('baddie', 'assets/baddie.png', 32, 30);
+    game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
 }
 
 var platforms,
@@ -33,7 +33,7 @@ function create() {
     createPlayer();
     createBonus();
 
-    createBot(550,900-600);
+    createBot(550,900-650);
 }
 var controller,
     canJump=true;
@@ -144,15 +144,16 @@ function createBot(x,y){
     if(!bots){
         createBots();
     }
-    bot=game.add.sprite(x,y,'baddie');
+    bot = game.add.sprite(x, y, 'robot');
 
     game.physics.arcade.enable(bot);
     //game.physics.arcade.collide(bot, platforms);
-    bot.body.gravity.y=500;
-    bot.animations.add('left',[0,1],10,true);
-    bot.animations.add('right',[2,3],10,true);
-    bot.size=32;
-    bot.direction=1;
+    bot.body.gravity.y = 500;
+    bot.animations.add('left',[13, 12, 11, 10, 9], 10, true);
+    bot.animations.add('right',[1, 2, 3, 4, 5, 6], 10, true);
+    bot.scale.setTo(0.3, 0.28);
+    // bot.size=32;
+    bot.direction = 1;
     bots.add(bot);
 
 }
@@ -222,7 +223,7 @@ function botsUpdate(){
     }
 }
 function botUpdate(bot){
-    //chech for ledge
+    //check for ledge
 
     if(bot.body.touching.left){
         bot.direction *=-1;
