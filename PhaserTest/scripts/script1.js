@@ -15,9 +15,11 @@ function preload() {
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('john', 'assets/john-short-new.png', 158.5, 225);
     game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
+    game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
 }
 
-var platforms,
+var worldHeight = 900,
+    platforms,
     background,
     player,
     bonus,
@@ -49,7 +51,7 @@ function update() {
 function createWorld(){
 
     //worldSize
-    game.world.setBounds(0, 0, 2400, 900);
+    game.world.setBounds(0, 0, 2400, worldHeight);
 
     //Physics
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -92,32 +94,41 @@ function createBonus(){
 }
 
 function SegmentOne(){
-    var ledge1 = platforms.create(400, 900 - 200, 'ground');
-    ledge1.body.immovable = true;
+    createLedgeWithBorders(400, 900 - 200);
+    createLedgeWithBorders(600, 900 - 350, 0.5, 1);
+    createLedgeWithBorders(0, 900 - 400);
+    createLedgeWithBorders(500, 900 - 550, 0.75, 1);
+}
 
+function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
+    var platformOriginalWidth = 400,
+        platformOriginalHeight = 32,
+        borderOriginalWidth = 22,
+        scaleX = scaleX || 1,
+        scaleY = scaleY || 1,
+        ledge,
+        ledgeWidth,
+        ledgeHeight,
+        borderLeft,
+        borderRight,
+        borderY;
 
+    ledge = platforms.create(ledgeX, ledgeY, 'ground');
+    ledge.body.immovable = true;
+    ledge.scale.setTo(scaleX,scaleY);
 
-    var ledge2 = platforms.create(600, 900 - 350, 'ground');
-    ledge2.body.immovable = true;
-    ledge2.scale.setTo(0.5,1);
+    ledgeWidth = platformOriginalWidth * scaleX;
+    ledgeHeight = platformOriginalHeight * scaleY;
 
-    var ledge3 = platforms.create(0, 900 - 400, 'ground');
-    ledge3.body.immovable = true;
+    borderY = ledgeY - ledgeHeight;
 
-    var ledge4 = platforms.create(500, 900 - 550, 'ground');
-    ledge4.body.immovable = true;
-    ledge4.scale.setTo(0.75,1);
-
-    var borderLeft=botBoundaries.create(500-200,900-580,'ground');
+    borderLeft=botBoundaries.create(ledgeX - borderOriginalWidth, borderY,'border');
     borderLeft.body.immovable = true;
-    borderLeft.scale.setTo(0.5,1);
-    borderLeft.renderable=false;
-    var borderRight=botBoundaries.create(800, 900-580,'ground');
+    borderLeft.renderable = false;
+
+    borderRight = botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
     borderRight.body.immovable = true;
-    borderRight.scale.setTo(0.5,1);
-    borderRight.renderable=false;
-
-
+    borderRight.renderable = false;
 }
 
 function createPlayer(){
