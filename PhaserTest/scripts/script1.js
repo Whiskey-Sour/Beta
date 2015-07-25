@@ -159,11 +159,7 @@ function createBot(x,y){
 function createBots(){
     bots=game.add.group();
     bots.enableBody=true;
-
-
 }
-
-
 function createController(){
     controller=game.input.keyboard.createCursorKeys();
     controller.fire=game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
