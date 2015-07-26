@@ -1,0 +1,50 @@
+/*TODO get rid of all unnecessary tags*/
+
+html, body, div, span, iframe,
+h1, h2, h3, h4, h5, h6, p, img, ol, ul, li,
+form, label, article, aside,
+footer, header, nav, section {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+body {
+    line-height:1;
+}
+
+#game-menu {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    background: url("../assets/blue-initial.png");
+}
+
+button {
+    display: inline-block;
+    position: absolute;
+    left: 40px;
+    width: 190px;
+    height: 50px;
+    border-color: transparent;
+    background: transparent;
+}
+
+#btn-play {
+    top: 300px;
+}
+
+#btn-highscores {
+    top: 390px;
+}
+
+#btn-about {
+    top: 480px;
+}
