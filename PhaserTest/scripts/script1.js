@@ -32,6 +32,7 @@ var Play = function () {
         bot,
         velocityScale=175,
         bullets,
+        lives,
         botBoundaries;
 
     function create() {
@@ -40,21 +41,31 @@ var Play = function () {
         createPlayer();
         createBonus();
         createBullets();
-
+        createHearts();
+        drawHearts();
         createBot(550,900-650);
     }
     var controller,
         canJump=true;
     function update() {
+        var oldLives=player.lives;
         createController();
         playerUpdate();
         botsUpdate();
         cameraUpdate();
         playerCollision();
         bulletsUpdate();
+       if(player.lives!==oldLives){
+            destroyGroup(lives);
+            drawHearts();
+        }
         //console.log(player.body.gravity.y);
     }
-
+    function destroyGroup(group){
+        for(var i in group.children){
+            group.children[i].kill();
+        }
+    }
     function createWorld(){
 
         //worldSize
@@ -110,6 +121,7 @@ var Play = function () {
         var bullet=bullets.create(player.x+30*dir,player.y+30,'star');
         game.physics.arcade.enable(bullet);
         bullet.body.velocity.x=300*dir;
+        player.lives -=1;
 
         //return bullet;
     }
@@ -195,6 +207,18 @@ var Play = function () {
     function createBots(){
         bots=game.add.group();
         bots.enableBody=true;
+    }
+
+    function createHearts(){
+        lives=game.add.group();
+        lives.enableBody=true;
+
+    }
+    function drawHearts(){
+        for(var i= 0; i<player.lives; i+=1){
+            var obj=lives.create(i*50, 20, 'firstaid');
+            obj.fixedToCamera=true;
+        }
     }
 
     function createController(){
