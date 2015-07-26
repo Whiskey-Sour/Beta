@@ -16,6 +16,7 @@ var Play = function () {
         game.load.image('star', 'assets/star.png');
         game.load.image('diamond', 'assets/diamond.png');
         game.load.image('firstaid','assets/firstaid.png');
+        game.load.image('background','assets/background.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('john', 'assets/john-short-new.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
@@ -63,8 +64,8 @@ var Play = function () {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //BackGround
-        background = game.add.sprite(0, 0, 'sky');
-        background.scale.setTo(3,1.5);
+        background = game.add.sprite(0, 0, 'background');
+        background.scale.setTo(3,1.1);
 
         //PlaceHolder
 
