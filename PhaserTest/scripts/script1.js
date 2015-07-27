@@ -369,3 +369,11 @@ var Play = function () {
         game.camera.y=player.y - 300;
     }
 }
+function bullet(){
+    var bullet=bullets.create(player.x+30*player.lastDirection,player.y,'shot');
+    game.physics.arcade.enable(bullet);
+    bullet.body.velocity.x=300*player.lastDirection;
+    player.ammo -=1;
+
+    //return bullet;
+}
