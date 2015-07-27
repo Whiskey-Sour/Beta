@@ -29,14 +29,14 @@ var Play = function() {
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
-        game.load.audio('jump', '../assets/audio/spaceman.wav');
-        game.load.audio('fire', '../assets/audio/https://raw.githubusercontent.com/Whiskey-Sour/Beta/443b9cd4ebf90457bb638f92136ae3f0ddbed663/PhaserTest/assets/audio/pistol.wav');
-        game.load.audio('bothit', '../assets/audio/sentry_explode.wav');
-        game.load.audio('theme', '../assets/audio/HonkyTonkVillai2.ogg');
-        game.load.audio('pickup', '../assets/audio/p-ping.mp3');
-        game.load.audio('playerdeath', '../assets/audio/player_death.wav');
-        game.load.audio('step', '../assets/audio/0085-1.ogg');
-        game.load.audio('playerhit', '../assets/audio/player_hit.wav');
+        game.load.audio('jump', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/spaceman.wav');
+        game.load.audio('fire', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/pistol.wav');
+        game.load.audio('bothit', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/sentry_explode.wav');
+        game.load.audio('theme', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/HonkyTonkVillai2.ogg');
+        game.load.audio('pickup', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/p-ping.mp3');
+        game.load.audio('playerdeath', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/player_death.wav');
+        game.load.audio('step', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/0085-1.ogg');
+        game.load.audio('playerhit', 'https://raw.githubusercontent.com/Whiskey-Sour/Beta/Sound/PhaserTest/assets/audio/player_hit.wav');
     }
 
     var worldHeight = 900,
