@@ -18,7 +18,7 @@ var Play = function () {
         game.load.image('firstaid','assets/firstaid.png');
         game.load.image('background','assets/background.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-        game.load.spritesheet('john', 'assets/john-short-new.png', 158.5, 225);
+        game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
     }
@@ -117,10 +117,9 @@ var Play = function () {
     }
 
     function bullet(){
-        var dir=player.body.velocity.x>=0 ? 1:-1;
-        var bullet=bullets.create(player.x+30*dir,player.y+30,'star');
+        var bullet=bullets.create(player.x+30*player.lastDirection,player.y+30,'star');
         game.physics.arcade.enable(bullet);
-        bullet.body.velocity.x=300*dir;
+        bullet.body.velocity.x=300*player.lastDirection;
         player.lives -=1;
 
         //return bullet;
@@ -178,11 +177,15 @@ var Play = function () {
         //animation: placeHolder
         player.animations.add('right', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 35, true);
         player.animations.add('left', [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14], 35, true);
-        player.animations.add('idle', [0], 10, true);
+        player.animations.add('faceRight', [0], 10, true);
+        player.animations.add('faceLeft', [27], 10, true);
+        player.animations.add('faceRightJump', [28], 10, true);
+        player.animations.add('faceLeftJum', [29], 10, true);
         // additional attrbutes
         player.scale.setTo(0.25);
         player.lives=3;
         player.score=0;
+        player.lastDirection=1; //right
 
     }
 
@@ -229,6 +232,15 @@ var Play = function () {
     var reload=5;
     function playerUpdate(){
         //collide with ground and platforms
+       if(player.lastDirection>0){
+           if(player.body.velocity.x<0){
+               player.lastDirection *=-1;
+           }
+       } else{
+           if(player.body.velocity.x>=0){
+               player.lastDirection *=-1;
+           }
+       }
         game.physics.arcade.collide(player, platforms);
         //retain speed in air or make it 0 when touching ground
         if(player.body.touching.down){
@@ -239,19 +251,38 @@ var Play = function () {
         }
 
         //movement left/right
-        if (controller.left.isDown) {
+        if (controller.left.isDown && player.body.velocity.y==0) {
             //  Move to the left
             player.body.velocity.x = -velocityScale;
 
+            console.log(player.lastDirection);
+
             player.animations.play('left');
-        }  else if (controller.right.isDown) {
+        }  else if (controller.right.isDown && player.body.velocity.y==0) {
             //  Move to the right
+
             player.body.velocity.x = velocityScale;
 
             player.animations.play('right');
         }  else  {
             //  Stand still
-            player.animations.play('idle');
+            if( player.body.velocity.y==0){
+                if(player.lastDirection==1) {
+                    player.animations.play('faceRight');
+                }else{
+                    player.animations.play('faceLeft');
+                }
+            }
+            else {
+                if(player.lastDirection==1) {
+                    player.animations.play('faceRightJump');
+                }else{
+                    player.animations.play('faceLeftJump');
+                }
+            }
+
+
+
         }
 
         if(controller.fire.isDown && timer>=10){
