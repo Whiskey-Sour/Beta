@@ -44,7 +44,8 @@ var Play = function () {
         createBullets();
         createHearts();
         drawHearts();
-        createBot(550,900-650);
+        botsCreation();
+
     }
     var controller,
         canJump=true;
@@ -67,10 +68,19 @@ var Play = function () {
             group.children[i].kill();
         }
     }
+    function botsCreation(){
+        var dir;
+        for(var i= 0; i<9; i+=1){
+            dir=Math.random() >= 0.5? 1:-1
+            createBot(800+i*80,900-650,dir);
+        }
+        createBot(550,900-650,1);
+
+    }
     function createWorld(){
 
         //worldSize
-        game.world.setBounds(0, 0, 2400, worldHeight);
+        game.world.setBounds(0, 0, 3200, worldHeight);
 
         //Physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -97,9 +107,10 @@ var Play = function () {
 
         //addGround
         var ground = platforms.create(0, game.world.height - 64, 'ground');
-        ground.scale.setTo(6, 2);
+        ground.scale.setTo(8, 2);
         ground.body.immovable = true;
         SegmentOne();
+        SegmentTwo();
         //addPlatforms: to be implemented
 
 
@@ -133,6 +144,11 @@ var Play = function () {
         createLedgeWithBorders(600, 900 - 350, 0.5, 1);
         createLedgeWithBorders(0, 900 - 400);
         createLedgeWithBorders(500, 900 - 550, 0.75, 1);
+    }
+
+    function SegmentTwo(){
+        createLedgeWithBorders(800, 850, 2,1);
+
     }
 
     function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
@@ -192,7 +208,7 @@ var Play = function () {
 
     }
 
-    function createBot(x,y){
+    function createBot(x,y,dir){
         if(!bots){
             createBots();
         }
@@ -205,7 +221,7 @@ var Play = function () {
         bot.animations.add('right',[1, 2, 3, 4, 5, 6], 10, true);
         bot.scale.setTo(0.3, 0.28);
         // bot.size=32;
-        bot.direction = 1;
+        bot.direction = dir;
         bots.add(bot);
 
     }
