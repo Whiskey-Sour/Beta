@@ -1,3 +1,6 @@
+
+
+
 // after some win/loose condition is fulfilled game is destroyed and Menu is called again
 // Example:
 // if (winLooseCondition) {
