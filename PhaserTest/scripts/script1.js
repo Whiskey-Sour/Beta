@@ -16,7 +16,7 @@ var Play = function () {
         game.load.image('star', 'assets/star.png');
         game.load.image('diamond', 'assets/diamond.png');
         game.load.image('firstaid','assets/firstaid.png');
-        game.load.image('background','assets/background.png');
+        game.load.image('background','assets/background-new.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
@@ -77,6 +77,7 @@ var Play = function () {
         //BackGround
         background = game.add.sprite(0, 0, 'background');
         background.scale.setTo(3,1.1);
+        background.alpha=1;
 
         //PlaceHolder
 
@@ -180,7 +181,7 @@ var Play = function () {
         player.animations.add('faceRight', [0], 10, true);
         player.animations.add('faceLeft', [27], 10, true);
         player.animations.add('faceRightJump', [28], 10, true);
-        player.animations.add('faceLeftJum', [29], 10, true);
+        player.animations.add('faceLeftJump', [29], 10, true);
         // additional attrbutes
         player.scale.setTo(0.25);
         player.lives=3;
@@ -232,15 +233,7 @@ var Play = function () {
     var reload=5;
     function playerUpdate(){
         //collide with ground and platforms
-       if(player.lastDirection>0){
-           if(player.body.velocity.x<0){
-               player.lastDirection *=-1;
-           }
-       } else{
-           if(player.body.velocity.x>=0){
-               player.lastDirection *=-1;
-           }
-       }
+
         game.physics.arcade.collide(player, platforms);
         //retain speed in air or make it 0 when touching ground
         if(player.body.touching.down){
@@ -251,38 +244,26 @@ var Play = function () {
         }
 
         //movement left/right
-        if (controller.left.isDown && player.body.velocity.y==0) {
+        if (controller.left.isDown) {
             //  Move to the left
             player.body.velocity.x = -velocityScale;
-
-            console.log(player.lastDirection);
-
+            //console.log(player.lastDirection);
             player.animations.play('left');
-        }  else if (controller.right.isDown && player.body.velocity.y==0) {
+            player.lastDirection=-1;
+        }
+        else if (controller.right.isDown ) {
             //  Move to the right
-
             player.body.velocity.x = velocityScale;
-
             player.animations.play('right');
+            player.lastDirection=1;
         }  else  {
             //  Stand still
-            if( player.body.velocity.y==0){
-                if(player.lastDirection==1) {
-                    player.animations.play('faceRight');
-                }else{
-                    player.animations.play('faceLeft');
-                }
+
+            if(player.lastDirection==1) {
+                player.animations.play('faceRight');
+            }else{
+                player.animations.play('faceLeft');
             }
-            else {
-                if(player.lastDirection==1) {
-                    player.animations.play('faceRightJump');
-                }else{
-                    player.animations.play('faceLeftJump');
-                }
-            }
-
-
-
         }
 
         if(controller.fire.isDown && timer>=10){
@@ -305,6 +286,13 @@ var Play = function () {
             player.body.gravity.y=300;
         } else {
             player.body.gravity.y=700;
+        }
+        if(!player.body.touching.down){
+            if(player.lastDirection==1) {
+                player.animations.play('faceRightJump');
+            }else{
+                player.animations.play('faceLeftJump');
+            }
         }
         //resistance in x
         var speed= Math.abs(player.body.velocity.x);
