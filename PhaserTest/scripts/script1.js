@@ -91,7 +91,7 @@ var Play = function () {
         var dir;
         for(var i= 0; i<9; i+=1){
             dir=Math.random() >= 0.5? 1:-1
-            createBot(800+i*80,700,dir);
+            createBot(820+i*80,700,dir);
         }
         createBot(550,900-650,1);
 
