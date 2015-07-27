@@ -72,7 +72,7 @@ var Play = function () {
         var dir;
         for(var i= 0; i<9; i+=1){
             dir=Math.random() >= 0.5? 1:-1
-            createBot(800+i*80,900-650,dir);
+            createBot(800+i*80,700,dir);
         }
         createBot(550,900-650,1);
 
@@ -349,7 +349,7 @@ var Play = function () {
             bot.direction *=-1;
         }
         //movement
-        bot.body.velocity.x= velocityScale*bot.direction;
+        bot.body.velocity.x= velocityScale*1.2*bot.direction;
         if(bot.body.velocity.x<=0){
             bot.animations.play('left');
         } else{
