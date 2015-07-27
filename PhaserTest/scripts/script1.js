@@ -14,6 +14,8 @@ var Play = function () {
         game.load.image('sky', 'assets/sky.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
+        game.load.image('shot', 'assets/bolt-fliped.png');
+        game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
         game.load.image('diamond', 'assets/diamond.png');
         game.load.image('firstaid','assets/firstaid.png');
@@ -34,16 +36,15 @@ var Play = function () {
         velocityScale=175,
         bullets,
         lives,
+        playerAmmo,
         botBoundaries;
 
     function create() {
         createWorld();
-        createPlatforms();
+        createAllGroups();
         createPlayer();
-        createBonus();
-        createBullets();
-        createHearts();
         drawHearts();
+        drawAmmo();
         botsCreation();
 
     }
@@ -51,6 +52,7 @@ var Play = function () {
         canJump=true;
     function update() {
         var oldLives=player.lives;
+        var oldAmmo=player.ammo;
         createController();
         playerUpdate();
         botsUpdate();
@@ -61,8 +63,21 @@ var Play = function () {
             destroyGroup(lives);
             drawHearts();
         }
+        if(player.ammo!==oldAmmo){
+            destroyGroup(playerAmmo);
+            drawAmmo();
+        }
         //console.log(player.body.gravity.y);
     }
+    function createAllGroups(){
+        createPlatforms();
+        createBonus();
+        createBullets();
+        createBots();
+        createHearts();
+        createAmmoIndicator();
+    }
+
     function destroyGroup(group){
         for(var i in group.children){
             group.children[i].kill();
@@ -96,7 +111,6 @@ var Play = function () {
 
     function createPlatforms(){
         //create platform groups
-
         //create group
         platforms = game.add.group();
         botBoundaries =game.add.group();
@@ -104,6 +118,7 @@ var Play = function () {
         //add physics
         platforms.enableBody = true;
         botBoundaries.enableBody=true;
+
 
         //addGround
         var ground = platforms.create(0, game.world.height - 64, 'ground');
@@ -130,10 +145,10 @@ var Play = function () {
     }
 
     function bullet(){
-        var bullet=bullets.create(player.x+30*player.lastDirection,player.y+30,'star');
+        var bullet=bullets.create(player.x+30*player.lastDirection,player.y,'shot');
         game.physics.arcade.enable(bullet);
         bullet.body.velocity.x=300*player.lastDirection;
-        player.lives -=1;
+        player.ammo -=1;
 
         //return bullet;
     }
@@ -204,7 +219,7 @@ var Play = function () {
         player.lives=3;
         player.score=0;
         player.lastDirection=1; //right
-        player.ammo=200; // test value
+        player.ammo=5; // test value
 
     }
 
@@ -236,10 +251,23 @@ var Play = function () {
         lives.enableBody=true;
 
     }
+
+    function createAmmoIndicator(){
+        playerAmmo=game.add.group();
+        playerAmmo.enableBody=true;
+    }
     function drawHearts(){
         for(var i= 0; i<player.lives; i+=1){
             var obj=lives.create(i*50, 20, 'firstaid');
             obj.fixedToCamera=true;
+        }
+    }
+
+    function drawAmmo(){
+        for(var i= 0; i<player.ammo; i+=1){
+            var obj=playerAmmo.create(i*25, 555, 'ammo');
+            obj.fixedToCamera=true;
+            obj.scale.setTo(0.75);
         }
     }
 
@@ -284,7 +312,7 @@ var Play = function () {
             }
         }
 
-        if(controller.fire.isDown && timer>=10){
+        if(controller.fire.isDown && timer>=15 && player.ammo>0){
             bullet();
             timer=0;
         }
