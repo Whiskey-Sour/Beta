@@ -67,7 +67,11 @@ var Play = function () {
             destroyGroup(playerAmmo);
             drawAmmo();
         }
-        //console.log(player.body.gravity.y);
+        if(player.lives<=0){
+            player.kill();
+        }
+        //console.log(
+        // player.body.gravity.y);
     }
     function createAllGroups(){
         createPlatforms();
@@ -219,7 +223,10 @@ var Play = function () {
         player.lives=3;
         player.score=0;
         player.lastDirection=1; //right
-        player.ammo=5; // test value
+        player.ammo=5;
+        player.timeOfLastHit=game.time.totalElapsedSeconds();
+        player.immortalTime=1.5;
+        player.canBeHurt=true;// test value
 
     }
 
@@ -346,6 +353,17 @@ var Play = function () {
             player.body.gravity.x= (speed/player.body.velocity.x)*25*-1;
         }
 
+        if(player.timeOfLastHit+player.immortalTime<game.time.totalElapsedSeconds()){
+            player.canBeHurt=true;
+        } else{
+            player.canBeHurt=false;
+        }
+        if(!player.canBeHurt){
+            player.alpha=Math.random();
+        } else{
+            player.alpha=1;
+        }
+
     }
 
     function botsUpdate(){
@@ -415,8 +433,10 @@ var Play = function () {
 
 
     function die(player,bot){
-        player.kill();
-        player.score +=10;
+        if(player.canBeHurt) {
+            player.lives -=1;
+            player.timeOfLastHit=game.time.totalElapsedSeconds();
+        }
         //console.log(player.score);
     }
 
