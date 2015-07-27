@@ -37,8 +37,6 @@ function create() {
     // Here we create the ground.
     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-
-
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     ground.scale.setTo(2, 2);
 
@@ -53,7 +51,6 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
 
     ledge.body.immovable = true;
-
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'dude');
