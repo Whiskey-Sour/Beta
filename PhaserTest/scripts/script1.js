@@ -14,6 +14,7 @@ var Play = function () {
         game.load.image('sky', 'assets/sky.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
+        game.load.image('key', 'assets/js.png');
         game.load.image('diamond', 'assets/diamond.png');
         game.load.image('firstaid','assets/firstaid.png');
         game.load.image('background','assets/background-new.png');
@@ -108,8 +109,8 @@ var Play = function () {
         bonus = game.add.group();
         bonus.enableBody=true;
 
-        var codeBonus=bonus.create(700,900 - 600,'star');
-
+        var codeBonus=bonus.create(700,900 - 600,'key');
+        codeBonus.scale.setTo(0.2);
     }
 
     function createBullets(){
@@ -187,6 +188,7 @@ var Play = function () {
         player.lives=3;
         player.score=0;
         player.lastDirection=1; //right
+        player.ammo=200; // test value
 
     }
 
