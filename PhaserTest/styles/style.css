@@ -27,7 +27,7 @@ body {
     background: url("../assets/menu-bg.png");
 }
 
-button {
+#game-menu button {
     display: inline-block;
     position: absolute;
     left: 40px;
@@ -47,4 +47,22 @@ button {
 
 #btn-about {
     top: 460px;
+}
+
+#story {
+    position: absolute;
+    top: 300px;
+    width: 800px;
+    height: 300px;
+    background-color: #E6E6E6;
+}
+
+#btn-back {
+    position: absolute;
+    bottom: 20px;
+    right: 50px;
+    width: 210px;
+    height: 63px;
+    border-radius: 30px;
+    background: url("../assets/btn-back.png") no-repeat scroll 0 0 transparent;
 }

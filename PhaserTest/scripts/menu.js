@@ -35,8 +35,6 @@ var Menu = function() {
             var buttonIdName = buttonsIdNames[0];
 
             $('#' + buttonIdName).on('click', function() {
-                // probably should remove div from DOM
-                // Play the game
                 $('#' + divIdName).remove();
                 Play1();
             });
@@ -51,6 +49,8 @@ var Menu = function() {
             $('#' + buttonIdName).on('click', function() {
                 // probably should remove div from DOM
                 // Show About
+                $('#' + divIdName).remove();
+                about();
             });
         }
 };
