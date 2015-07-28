@@ -23,6 +23,7 @@ var Play1 = function() {
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
         game.load.image('diamond', 'assets/diamond.png');
+        game.load.image('turret', 'assets/turret.png');
         game.load.image('spike', 'assets/spikeplz.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
@@ -60,7 +61,8 @@ var Play1 = function() {
         playerDeathSound,
         stepSound,
         spikes,
-        playerHitSound;
+        playerHitSound,
+        turret;
 
     function create() {
         createWorld();
@@ -72,6 +74,7 @@ var Play1 = function() {
         createSounds();
         addSpikesToGame();
         placeBonusTokens();
+        createTurret();
     }
     var controller,
         canJump = true;
@@ -85,6 +88,7 @@ var Play1 = function() {
         cameraUpdate();
         playerCollision();
         bulletsUpdate();
+        turretUpdate();
         if (player.lives !== oldLives) {
             destroyGroup(lives);
             drawHearts();
@@ -103,6 +107,14 @@ var Play1 = function() {
         // player.body.gravity.y);
     }
 
+    function createTurret(){
+        turret=game.add.sprite(3000,700,'turret');
+        turret.scale.setTo(0.5);
+        turret.angle=30;
+        turret.reloadTime=2;
+        turret.timeOfLastShot= game.time.totalElapsedSeconds();
+    }
+
     function createAllGroups() {
         createPlatforms();
         createBonus();
@@ -111,6 +123,7 @@ var Play1 = function() {
         createHearts();
         createAmmoIndicator();
         createSpikes();
+
     }
 
     function destroyGroup(group) {
@@ -205,7 +218,7 @@ var Play1 = function() {
         game.physics.arcade.enable(bullet);
         bullet.body.velocity.x = 300 * player.lastDirection;
         player.ammo -= 1;
-
+        return bullet;
         //return bullet;
     }
 
@@ -262,14 +275,16 @@ var Play1 = function() {
         borderRight.body.immovable = true;
         borderRight.renderable = false;
     }
+
     function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
         var ledge = platforms.create(ledgeX, ledgeY, 'ground');
         ledge.body.immovable = true;
         ledge.scale.setTo(scaleX, scaleY);
     }
+
     function createPlayer() {
         //sprite: placeHolder
-        player = game.add.sprite(200, game.world.height - 150, 'john');
+        player = game.add.sprite(2800, game.world.height - 150, 'john');
         //physics
         game.physics.arcade.enable(player);
         game.physics.arcade.collide(player, platforms);
@@ -296,6 +311,7 @@ var Play1 = function() {
         player.canBeHurt = true; // test value
 
     }
+
 
     function createBot(x, y, dir) {
         if (!bots) {
@@ -524,7 +540,6 @@ var Play1 = function() {
         //console.log(player.score);
     }
 
-
     function die(player, bot) {
         if (player.canBeHurt) {
             player.lives -= 1;
@@ -549,5 +564,20 @@ var Play1 = function() {
         } //right most camera
         game.camera.x = player.x - SCREENSIZE / 2;
         game.camera.y = player.y - 300;
+    }
+
+    function turretUpdate(){
+        var xdist=Math.abs(turret.x-player.x);
+        var ydist=turret.y-player.y;
+        //console.log(xdist);
+
+        var angle=Math.atan(ydist/xdist)*180/Math.PI;
+
+        console.log(angle);
+        turret.angle=angle-10;
+
+        //var
+
+
     }
 }
