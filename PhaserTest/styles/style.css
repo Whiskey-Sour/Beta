@@ -24,7 +24,7 @@ body {
     position: relative;
     width: 800px;
     height: 600px;
-    background: url("../assets/blue-initial.png");
+    background: url("../assets/menu-bg.png");
 }
 
 button {
@@ -38,13 +38,13 @@ button {
 }
 
 #btn-play {
-    top: 300px;
+    top: 280px;
 }
 
 #btn-highscores {
-    top: 390px;
+    top: 370px;
 }
 
 #btn-about {
-    top: 480px;
+    top: 460px;
 }
