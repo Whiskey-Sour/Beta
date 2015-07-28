@@ -38,7 +38,7 @@ var Menu = function() {
                 // probably should remove div from DOM
                 // Play the game
                 $('#' + divIdName).remove();
-                Play();
+                Play1();
             });
 
             buttonIdName = buttonsIdNames[1];

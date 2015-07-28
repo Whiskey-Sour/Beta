@@ -7,7 +7,7 @@
 // Remark: this code produces TypeError in browser: Cannot read property 'keyboard' of null
 //  still, it works
 
-var Play = function() {
+var Play1 = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
         preload: preload,
         create: create,
@@ -23,20 +23,21 @@ var Play = function() {
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
         game.load.image('diamond', 'assets/diamond.png');
+        game.load.image('spike', 'assets/spikeplz.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
-        game.load.audio('jump', '../assets/audio/spaceman.wav');
-        game.load.audio('fire', '../assets/audio/pistol.wav');
-        game.load.audio('bothit', '../assets/audio/sentry_explode.wav');
-        game.load.audio('theme', '../assets/audio/HonkyTonkVillai2.ogg');
-        game.load.audio('pickup', '../assets/audio/p-ping.mp3');
-        game.load.audio('playerdeath', '../assets/audio/player_death.wav');
-        game.load.audio('step', '../assets/audio/0085-1.ogg');
-        game.load.audio('playerhit', '../assets/audio/player_hit.wav');
+       /* game.load.audio('jump', 'assets/audio/spaceman.wav');
+        game.load.audio('fire', 'assets/audio/pistol.wav');
+        game.load.audio('bothit', 'assets/audio/sentry_explode.wav');
+        game.load.audio('theme', 'assets/audio/HonkyTonkVillai2.ogg');
+        game.load.audio('pickup', 'assets/audio/p-ping.mp3');
+        game.load.audio('playerdeath', 'assets/audio/player_death.wav');
+        game.load.audio('step', 'assets/audio/0085-1.ogg');
+        game.load.audio('playerhit', 'assets/audio/player_hit.wav');*/
     }
 
     var worldHeight = 900,
@@ -58,6 +59,7 @@ var Play = function() {
         pickupSound,
         playerDeathSound,
         stepSound,
+        spikes,
         playerHitSound;
 
     function create() {
@@ -68,6 +70,8 @@ var Play = function() {
         drawAmmo();
         botsCreation();
         createSounds();
+        addSpikesToGame();
+        placeBonusTokens();
     }
     var controller,
         canJump = true;
@@ -92,7 +96,9 @@ var Play = function() {
         if (player.alive && player.lives <= 0) {
             player.kill();
             playerDeathSound.play();
+            game.destroy();
         }
+       // console.log(player.x);
         //console.log(
         // player.body.gravity.y);
     }
@@ -104,6 +110,7 @@ var Play = function() {
         createBots();
         createHearts();
         createAmmoIndicator();
+        createSpikes();
     }
 
     function destroyGroup(group) {
@@ -156,6 +163,7 @@ var Play = function() {
         ground.body.immovable = true;
         SegmentOne();
         SegmentTwo();
+        SegmentThree();
         //addPlatforms: to be implemented
 
 
@@ -165,8 +173,13 @@ var Play = function() {
         bonus = game.add.group();
         bonus.enableBody = true;
 
-        var codeBonus = bonus.create(700, 900 - 600, 'key');
+        //var codeBonus = bonus.create(700, 900 - 600, 'key');
         //codeBonus.scale.setTo(0.2);
+    }
+    function placeBonusTokens(){
+        var codeBonus1 = bonus.create(700, 900 - 600, 'key');
+        var codeBonus2 = bonus.create(1200, 800, 'key');
+        var codeBonus3 = bonus.create(1920, 250, 'key');
     }
 
     function createBullets() {
@@ -209,6 +222,16 @@ var Play = function() {
 
     }
 
+    function SegmentThree() {
+        createLedge(1700,700,0.2,0.4);
+        createLedge(1750,500,0.2,0.4);
+        createLedge(1900,600,0.2,0.4);
+        createLedge(1900,300,0.2,0.4);
+        createLedge(2000,450,0.4,0.4);
+        createLedge(2400,700,0.4,0.4);
+
+    }
+
     function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
         var platformOriginalWidth = 400,
             platformOriginalHeight = 32,
@@ -239,7 +262,11 @@ var Play = function() {
         borderRight.body.immovable = true;
         borderRight.renderable = false;
     }
-
+    function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
+        var ledge = platforms.create(ledgeX, ledgeY, 'ground');
+        ledge.body.immovable = true;
+        ledge.scale.setTo(scaleX, scaleY);
+    }
     function createPlayer() {
         //sprite: placeHolder
         player = game.add.sprite(200, game.world.height - 150, 'john');
@@ -261,6 +288,7 @@ var Play = function() {
         player.scale.setTo(0.25);
         player.lives = 3;
         player.score = 0;
+        player.bonusCount=0;
         player.lastDirection = 1; //right
         player.ammo = 5;
         player.timeOfLastHit = game.time.totalElapsedSeconds();
@@ -290,6 +318,17 @@ var Play = function() {
     function createBots() {
         bots = game.add.group();
         bots.enableBody = true;
+    }
+
+    function createSpikes(){
+        spikes=game.add.group();
+        spikes.enableBody=true;
+    }
+    function addSpikesToGame(){
+        var spike;
+        for(var i=0; i<15; i+=1){
+            spike=spikes.create(1700+i*50, 800, 'spike');
+        }
     }
 
     function createHearts() {
@@ -379,7 +418,7 @@ var Play = function() {
             }
             //  Allow the player to jump if they are touching the ground.
             if (controller.up.isDown && player.body.touching.down && canJump) {
-                player.body.velocity.y = -350;
+                player.body.velocity.y = -300;
                 canJump = false;
                 jumpSound.play();
 
@@ -459,13 +498,15 @@ var Play = function() {
         game.physics.arcade.collide(bonus, platforms);
         game.physics.arcade.overlap(player, bonus, collect, null, this);
         game.physics.arcade.overlap(player, bots, die, null, this);
+        game.physics.arcade.overlap(player, spikes, dieSpike, null, this);
 
     }
 
     function collect(player, bon) {
         bon.kill();
         player.score += 10;
-        player.ammo = 5;
+        //player.ammo = 5;
+        player.bonusCount +=1;
         pickupSound.play();
         //console.log(player.score);
     }
@@ -493,6 +534,9 @@ var Play = function() {
         //console.log(player.score);
     }
 
+    function dieSpike(player,spike){
+        player.lives=0;
+    }
 
     function cameraUpdate() {
 
