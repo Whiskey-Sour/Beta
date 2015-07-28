@@ -151,26 +151,24 @@ var Play1 = function() {
         background.alpha = 1;
 
         //PlaceHolder
+    }
+    function SegmentOne() {
+        createLedgeWithBorders(400, 900 - 200);
+        createLedgeWithBorders(600, 900 - 350, 0.5, 1);
+        createLedgeWithBorders(0, 900 - 400);
+        createLedgeWithBorders(500, 900 - 550, 0.75, 1);
+    }
+    function SegmentTwo() {
+        createLedgeWithBorders(800, 850, 2, 1);
 
-        function SegmentOne() {
-            createLedgeWithBorders(400, 900 - 200);
-            createLedgeWithBorders(600, 900 - 350, 0.5, 1);
-            createLedgeWithBorders(0, 900 - 400);
-            createLedgeWithBorders(500, 900 - 550, 0.75, 1);
-        }
-        function SegmentTwo() {
-            createLedgeWithBorders(800, 850, 2, 1);
-
-        }
-        function SegmentThree() {
-            createLedge(1700,700,0.2,0.4);
-            createLedge(1750,500,0.2,0.4);
-            createLedge(1900,600,0.2,0.4);
-            createLedge(1900,300,0.2,0.4);
-            createLedge(2000,450,0.4,0.4);
-            createLedge(2400,700,0.4,0.4);
-
-        }
+    }
+    function SegmentThree() {
+        createLedge(1700,700,0.2,0.4);
+        createLedge(1750,500,0.2,0.4);
+        createLedge(1900,600,0.2,0.4);
+        createLedge(1900,300,0.2,0.4);
+        createLedge(2000,450,0.4,0.4);
+        createLedge(2400,700,0.4,0.4);
 
     }
     function createPlatforms() {
