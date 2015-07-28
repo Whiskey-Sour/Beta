@@ -13,6 +13,12 @@ var Play1 = function() {
         create: create,
         update: update
     });
+    var gameGroupWithPhysics={
+        add: function(string){
+            this[string]=game.add.group();
+            this[string].enableBody=true;
+        }
+    }
     var SCREENSIZE = 800;
 
     function preload() {
@@ -75,6 +81,7 @@ var Play1 = function() {
         addSpikesToGame();
         placeBonusTokens();
         createTurret();
+        gameGroupWithPhysics.add('Jimmy');
     }
     var controller,
         canJump = true;
@@ -116,8 +123,11 @@ var Play1 = function() {
     }
 
     function createAllGroups() {
+        gameGroupWithPhysics.add('platforms');
+        gameGroupWithPhysics.add('botBoundaries');
         createPlatforms();
-        createBonus();
+        gameGroupWithPhysics.add('bonus');
+        //createBonus();
         createBullets();
         createBots();
         createHearts();
@@ -162,16 +172,16 @@ var Play1 = function() {
     function createPlatforms() {
         //create platform groups
         //create group
-        platforms = game.add.group();
+        /*platforms = game.add.group();
         botBoundaries = game.add.group();
 
         //add physics
         platforms.enableBody = true;
-        botBoundaries.enableBody = true;
+        botBoundaries.enableBody = true;*/
 
 
         //addGround
-        var ground = platforms.create(0, game.world.height - 64, 'ground');
+        var ground =  gameGroupWithPhysics.platforms.create(0, game.world.height - 64, 'ground');
         ground.scale.setTo(8, 2);
         ground.body.immovable = true;
         SegmentOne();
@@ -190,9 +200,9 @@ var Play1 = function() {
         //codeBonus.scale.setTo(0.2);
     }
     function placeBonusTokens(){
-        var codeBonus1 = bonus.create(700, 900 - 600, 'key');
-        var codeBonus2 = bonus.create(1200, 800, 'key');
-        var codeBonus3 = bonus.create(1920, 250, 'key');
+        var codeBonus1 = gameGroupWithPhysics.bonus.create(700, 900 - 600, 'key');
+        var codeBonus2 = gameGroupWithPhysics.bonus.create(1200, 800, 'key');
+        var codeBonus3 = gameGroupWithPhysics.bonus.create(1920, 250, 'key');
     }
 
     function createBullets() {
@@ -258,7 +268,7 @@ var Play1 = function() {
             borderRight,
             borderY;
 
-        ledge = platforms.create(ledgeX, ledgeY, 'ground');
+        ledge = gameGroupWithPhysics.platforms.create(ledgeX, ledgeY, 'ground');
         ledge.body.immovable = true;
         ledge.scale.setTo(scaleX, scaleY);
 
@@ -267,24 +277,24 @@ var Play1 = function() {
 
         borderY = ledgeY - ledgeHeight;
 
-        borderLeft = botBoundaries.create(ledgeX - borderOriginalWidth, borderY, 'border');
+        borderLeft = gameGroupWithPhysics.botBoundaries.create(ledgeX - borderOriginalWidth, borderY, 'border');
         borderLeft.body.immovable = true;
         borderLeft.renderable = false;
 
-        borderRight = botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
+        borderRight = gameGroupWithPhysics.botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
         borderRight.body.immovable = true;
         borderRight.renderable = false;
     }
 
     function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
-        var ledge = platforms.create(ledgeX, ledgeY, 'ground');
+        var ledge = gameGroupWithPhysics.platforms.create(ledgeX, ledgeY, 'ground');
         ledge.body.immovable = true;
         ledge.scale.setTo(scaleX, scaleY);
     }
 
     function createPlayer() {
         //sprite: placeHolder
-        player = game.add.sprite(2800, game.world.height - 150, 'john');
+        player = game.add.sprite(200, game.world.height - 150, 'john');
         //physics
         game.physics.arcade.enable(player);
         game.physics.arcade.collide(player, platforms);
@@ -383,7 +393,7 @@ var Play1 = function() {
     function playerUpdate() {
         //collide with ground and platforms
         if (player.alive) {
-            game.physics.arcade.collide(player, platforms);
+            game.physics.arcade.collide(player, gameGroupWithPhysics.platforms);
             //retain speed in air or make it 0 when touching ground
             if (player.body.touching.down) {
                 player.body.velocity.x = 0;
@@ -471,17 +481,17 @@ var Play1 = function() {
     }
 
     function botsUpdate() {
-        game.physics.arcade.collide(bots, platforms);
-        game.physics.arcade.collide(botBoundaries, bots);
+        game.physics.arcade.collide(bots, gameGroupWithPhysics.platforms);
+        game.physics.arcade.collide(gameGroupWithPhysics.botBoundaries, bots);
         for (var i in bots.children) {
             botUpdate(bots.children[i]);
         }
     }
 
     function bulletsUpdate() {
-        game.physics.arcade.collide(bullets, platforms);
+        game.physics.arcade.collide(bullets, gameGroupWithPhysics.platforms);
         game.physics.arcade.overlap(bullets, bots, hitBot, null, this);
-        game.physics.arcade.overlap(platforms, bots, hitWall, null, this);
+        game.physics.arcade.overlap(gameGroupWithPhysics.platforms, bots, hitWall, null, this);
         for (var i in bullets.children) {
             if (bullets.children[i].body.touching.left || bullets.children[i].body.touching.right) {
                 bullets.children[i].kill();
@@ -511,8 +521,8 @@ var Play1 = function() {
     }
 
     function playerCollision() {
-        game.physics.arcade.collide(bonus, platforms);
-        game.physics.arcade.overlap(player, bonus, collect, null, this);
+        game.physics.arcade.collide(gameGroupWithPhysics.bonus, platforms);
+        game.physics.arcade.overlap(player, gameGroupWithPhysics.bonus, collect, null, this);
         game.physics.arcade.overlap(player, bots, die, null, this);
         game.physics.arcade.overlap(player, spikes, dieSpike, null, this);
 
