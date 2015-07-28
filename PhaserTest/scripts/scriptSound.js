@@ -14,11 +14,11 @@ var Play1 = function() {
         update: update
     });
     var gameGroupWithPhysics={
-        add: function(string){
-            this[string]=game.add.group();
-            this[string].enableBody=true;
+        add: function(groupName){
+            this[groupName]=game.add.group();
+            this[groupName].enableBody=true;
         }
-    }
+    };
     var SCREENSIZE = 800;
 
     function preload() {
@@ -51,14 +51,7 @@ var Play1 = function() {
         platforms,
         background,
         player,
-        bonus,
-        bots,
-        bot,
         velocityScale = 175,
-        bullets,
-        lives,
-        playerAmmo,
-        botBoundaries,
         jumpSound,
         fireSound,
         botHitSound,
@@ -66,20 +59,21 @@ var Play1 = function() {
         pickupSound,
         playerDeathSound,
         stepSound,
-        spikes,
+        //spikes,
         playerHitSound,
         turret;
 
     function create() {
         createWorld();
         createAllGroups();
+        createPlatforms();
         createPlayer();
         drawHearts();
         drawAmmo();
-        botsCreation();
+        createBots();
         createSounds();
-        addSpikesToGame();
-        placeBonusTokens();
+        createSpikes();
+        createBonusTokens();
         createTurret();
         gameGroupWithPhysics.add('Jimmy');
     }
@@ -97,11 +91,11 @@ var Play1 = function() {
         bulletsUpdate();
         turretUpdate();
         if (player.lives !== oldLives) {
-            destroyGroup(lives);
+            destroyGroup(gameGroupWithPhysics.lives);
             drawHearts();
         }
         if (player.ammo !== oldAmmo) {
-            destroyGroup(playerAmmo);
+            destroyGroup(gameGroupWithPhysics.playerAmmo);
             drawAmmo();
         }
         if (player.alive && player.lives <= 0) {
@@ -114,35 +108,27 @@ var Play1 = function() {
         // player.body.gravity.y);
     }
 
-    function createTurret(){
-        turret=game.add.sprite(3000,700,'turret');
-        turret.scale.setTo(0.5);
-        turret.angle=30;
-        turret.reloadTime=2;
-        turret.timeOfLastShot= game.time.totalElapsedSeconds();
-    }
 
+
+    /*Group Management*/
     function createAllGroups() {
         gameGroupWithPhysics.add('platforms');
         gameGroupWithPhysics.add('botBoundaries');
-        createPlatforms();
         gameGroupWithPhysics.add('bonus');
-        //createBonus();
-        createBullets();
-        createBots();
-        createHearts();
-        createAmmoIndicator();
-        createSpikes();
-
+        gameGroupWithPhysics.add('bullets');
+        gameGroupWithPhysics.add('bots');
+        gameGroupWithPhysics.add('lives');
+        gameGroupWithPhysics.add('playerAmmo');
+        gameGroupWithPhysics.add('spikes');
     }
-
     function destroyGroup(group) {
         for (var i in group.children) {
             group.children[i].kill();
         }
     }
 
-    function botsCreation() {
+    /*Populating game world*/
+    function createBots() {
         var dir;
         for (var i = 0; i < 9; i += 1) {
             dir = Math.random() >= 0.5 ? 1 : -1
@@ -151,7 +137,6 @@ var Play1 = function() {
         createBot(550, 900 - 650, 1);
 
     }
-
     function createWorld() {
 
         //worldSize
@@ -167,18 +152,28 @@ var Play1 = function() {
 
         //PlaceHolder
 
+        function SegmentOne() {
+            createLedgeWithBorders(400, 900 - 200);
+            createLedgeWithBorders(600, 900 - 350, 0.5, 1);
+            createLedgeWithBorders(0, 900 - 400);
+            createLedgeWithBorders(500, 900 - 550, 0.75, 1);
+        }
+        function SegmentTwo() {
+            createLedgeWithBorders(800, 850, 2, 1);
+
+        }
+        function SegmentThree() {
+            createLedge(1700,700,0.2,0.4);
+            createLedge(1750,500,0.2,0.4);
+            createLedge(1900,600,0.2,0.4);
+            createLedge(1900,300,0.2,0.4);
+            createLedge(2000,450,0.4,0.4);
+            createLedge(2400,700,0.4,0.4);
+
+        }
+
     }
-
     function createPlatforms() {
-        //create platform groups
-        //create group
-        /*platforms = game.add.group();
-        botBoundaries = game.add.group();
-
-        //add physics
-        platforms.enableBody = true;
-        botBoundaries.enableBody = true;*/
-
 
         //addGround
         var ground =  gameGroupWithPhysics.platforms.create(0, game.world.height - 64, 'ground');
@@ -191,25 +186,11 @@ var Play1 = function() {
 
 
     }
-
-    function createBonus() {
-        bonus = game.add.group();
-        bonus.enableBody = true;
-
-        //var codeBonus = bonus.create(700, 900 - 600, 'key');
-        //codeBonus.scale.setTo(0.2);
-    }
-    function placeBonusTokens(){
+    function createBonusTokens(){
         var codeBonus1 = gameGroupWithPhysics.bonus.create(700, 900 - 600, 'key');
         var codeBonus2 = gameGroupWithPhysics.bonus.create(1200, 800, 'key');
         var codeBonus3 = gameGroupWithPhysics.bonus.create(1920, 250, 'key');
     }
-
-    function createBullets() {
-        bullets = game.add.group();
-        bullets.enableBody = true;
-    }
-
     function createSounds() {
         jumpSound = game.add.audio('jump');
         fireSound = game.add.audio('fire');
@@ -222,39 +203,58 @@ var Play1 = function() {
         playerHitSound = game.add.audio('playerhit');
         themeSound.loopFull();
     }
+    function createSpikes(){
+        var spike;
+        for(var i=0; i<15; i+=1){
+            spike=gameGroupWithPhysics.spikes.create(1700+i*50, 800, 'spike');
+        }
+    }
+    function createPlayer() {
+        //sprite: placeHolder
+        player = game.add.sprite(200, game.world.height - 150, 'john');
+        //physics
+        game.physics.arcade.enable(player);
 
+        //gravity
+        player.body.gravity.y = 500;
+        player.body.collideWorldBounds = true;
+
+        //animation: placeHolder
+        player.animations.add('right', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 35, true);
+        player.animations.add('left', [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14], 35, true);
+        player.animations.add('faceRight', [0], 10, true);
+        player.animations.add('faceLeft', [27], 10, true);
+        player.animations.add('faceRightJump', [28], 10, true);
+        player.animations.add('faceLeftJump', [29], 10, true);
+        // additional attrbutes
+        player.scale.setTo(0.25);
+        player.lives = 3;
+        player.score = 0;
+        player.bonusCount=0;
+        player.lastDirection = 1; //right
+        player.ammo = 5;
+        player.timeOfLastHit = game.time.totalElapsedSeconds();
+        player.immortalTime = 1.5;
+        player.canBeHurt = true; // test value
+
+    }
+    function createTurret(){
+        turret=game.add.sprite(3000,700,'turret');
+        turret.scale.setTo(0.5);
+        turret.angle=30;
+        turret.reloadTime=2;
+        turret.timeOfLastShot= game.time.totalElapsedSeconds();
+    }
+
+    /* Single Object Creators*/
     function bullet() {
-        var bullet = bullets.create(player.x + 30 * player.lastDirection, player.y, 'shot');
+        var bullet = gameGroupWithPhysics.bullets.create(player.x + 30 * player.lastDirection, player.y, 'shot');
         game.physics.arcade.enable(bullet);
         bullet.body.velocity.x = 300 * player.lastDirection;
         player.ammo -= 1;
         return bullet;
         //return bullet;
     }
-
-
-    function SegmentOne() {
-        createLedgeWithBorders(400, 900 - 200);
-        createLedgeWithBorders(600, 900 - 350, 0.5, 1);
-        createLedgeWithBorders(0, 900 - 400);
-        createLedgeWithBorders(500, 900 - 550, 0.75, 1);
-    }
-
-    function SegmentTwo() {
-        createLedgeWithBorders(800, 850, 2, 1);
-
-    }
-
-    function SegmentThree() {
-        createLedge(1700,700,0.2,0.4);
-        createLedge(1750,500,0.2,0.4);
-        createLedge(1900,600,0.2,0.4);
-        createLedge(1900,300,0.2,0.4);
-        createLedge(2000,450,0.4,0.4);
-        createLedge(2400,700,0.4,0.4);
-
-    }
-
     function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
         var platformOriginalWidth = 400,
             platformOriginalHeight = 32,
@@ -285,49 +285,14 @@ var Play1 = function() {
         borderRight.body.immovable = true;
         borderRight.renderable = false;
     }
-
     function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
         var ledge = gameGroupWithPhysics.platforms.create(ledgeX, ledgeY, 'ground');
         ledge.body.immovable = true;
         ledge.scale.setTo(scaleX, scaleY);
     }
-
-    function createPlayer() {
-        //sprite: placeHolder
-        player = game.add.sprite(200, game.world.height - 150, 'john');
-        //physics
-        game.physics.arcade.enable(player);
-        game.physics.arcade.collide(player, platforms);
-        //gravity
-        player.body.gravity.y = 500;
-        player.body.collideWorldBounds = true;
-
-        //animation: placeHolder
-        player.animations.add('right', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], 35, true);
-        player.animations.add('left', [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14], 35, true);
-        player.animations.add('faceRight', [0], 10, true);
-        player.animations.add('faceLeft', [27], 10, true);
-        player.animations.add('faceRightJump', [28], 10, true);
-        player.animations.add('faceLeftJump', [29], 10, true);
-        // additional attrbutes
-        player.scale.setTo(0.25);
-        player.lives = 3;
-        player.score = 0;
-        player.bonusCount=0;
-        player.lastDirection = 1; //right
-        player.ammo = 5;
-        player.timeOfLastHit = game.time.totalElapsedSeconds();
-        player.immortalTime = 1.5;
-        player.canBeHurt = true; // test value
-
-    }
-
-
     function createBot(x, y, dir) {
-        if (!bots) {
-            createBots();
-        }
-        bot = game.add.sprite(x, y, 'robot');
+
+        var bot = game.add.sprite(x, y, 'robot');
 
         game.physics.arcade.enable(bot);
         //game.physics.arcade.collide(bot, platforms);
@@ -337,59 +302,34 @@ var Play1 = function() {
         bot.scale.setTo(0.3, 0.28);
         // bot.size=32;
         bot.direction = dir;
-        bots.add(bot);
+        gameGroupWithPhysics.bots.add(bot);
 
     }
 
-    function createBots() {
-        bots = game.add.group();
-        bots.enableBody = true;
+    /*Player Controlls*/
+    function createController() {
+        controller = game.input.keyboard.createCursorKeys();
+        controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     }
 
-    function createSpikes(){
-        spikes=game.add.group();
-        spikes.enableBody=true;
-    }
-    function addSpikesToGame(){
-        var spike;
-        for(var i=0; i<15; i+=1){
-            spike=spikes.create(1700+i*50, 800, 'spike');
-        }
-    }
-
-    function createHearts() {
-        lives = game.add.group();
-        lives.enableBody = true;
-
-    }
-
-    function createAmmoIndicator() {
-        playerAmmo = game.add.group();
-        playerAmmo.enableBody = true;
-    }
-
+    /*Draw Functions*/
     function drawHearts() {
         for (var i = 0; i < player.lives; i += 1) {
-            var obj = lives.create(i * 50, 20, 'firstaid');
+            var obj = gameGroupWithPhysics.lives.create(i * 50, 20, 'firstaid');
             obj.fixedToCamera = true;
         }
     }
-
     function drawAmmo() {
         for (var i = 0; i < player.ammo; i += 1) {
-            var obj = playerAmmo.create(i * 25, 555, 'ammo');
+            var obj = gameGroupWithPhysics.playerAmmo.create(i * 25, 555, 'ammo');
             obj.fixedToCamera = true;
             obj.scale.setTo(0.75);
         }
     }
 
-    function createController() {
-        controller = game.input.keyboard.createCursorKeys();
-        controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    }
+    /*Update Function*/
     var timer = 0;
     var reload = 5;
-
     function playerUpdate() {
         //collide with ground and platforms
         if (player.alive) {
@@ -479,29 +419,24 @@ var Play1 = function() {
             }
         }
     }
-
     function botsUpdate() {
-        game.physics.arcade.collide(bots, gameGroupWithPhysics.platforms);
-        game.physics.arcade.collide(gameGroupWithPhysics.botBoundaries, bots);
-        for (var i in bots.children) {
-            botUpdate(bots.children[i]);
+        game.physics.arcade.collide(gameGroupWithPhysics.bots, gameGroupWithPhysics.platforms);
+        game.physics.arcade.collide(gameGroupWithPhysics.botBoundaries, gameGroupWithPhysics.bots);
+        for (var i in gameGroupWithPhysics.bots.children) {
+            botUpdate(gameGroupWithPhysics.bots.children[i]);
         }
     }
-
     function bulletsUpdate() {
-        game.physics.arcade.collide(bullets, gameGroupWithPhysics.platforms);
-        game.physics.arcade.overlap(bullets, bots, hitBot, null, this);
-        game.physics.arcade.overlap(gameGroupWithPhysics.platforms, bots, hitWall, null, this);
-        for (var i in bullets.children) {
-            if (bullets.children[i].body.touching.left || bullets.children[i].body.touching.right) {
-                bullets.children[i].kill();
+        game.physics.arcade.collide(gameGroupWithPhysics.bullets, gameGroupWithPhysics.platforms);
+        game.physics.arcade.overlap(gameGroupWithPhysics.bullets, gameGroupWithPhysics.bots, hitBot, null, this);
+        game.physics.arcade.overlap(gameGroupWithPhysics.platforms, gameGroupWithPhysics.bots, hitWall, null, this);
+        for (var i in gameGroupWithPhysics.bullets.children) {
+            if (gameGroupWithPhysics.bullets.children[i].body.touching.left || gameGroupWithPhysics.bullets.children[i].body.touching.right) {
+                gameGroupWithPhysics.bullets.children[i].kill();
             }
         }
     }
-
     function botUpdate(bot) {
-        //check for ledge
-
         if (bot.body.touching.left) {
             bot.direction *= -1;
         }
@@ -515,54 +450,7 @@ var Play1 = function() {
         } else {
             bot.animations.play('right');
         }
-
-
-
     }
-
-    function playerCollision() {
-        game.physics.arcade.collide(gameGroupWithPhysics.bonus, platforms);
-        game.physics.arcade.overlap(player, gameGroupWithPhysics.bonus, collect, null, this);
-        game.physics.arcade.overlap(player, bots, die, null, this);
-        game.physics.arcade.overlap(player, spikes, dieSpike, null, this);
-
-    }
-
-    function collect(player, bon) {
-        bon.kill();
-        player.score += 10;
-        //player.ammo = 5;
-        player.bonusCount +=1;
-        pickupSound.play();
-        //console.log(player.score);
-    }
-
-    function hitBot(bullet, bot) {
-        bullet.kill();
-        bot.kill();
-        player.score += 10;
-        botHitSound.play();
-        //console.log(player.score);
-    }
-
-    function hitWall(bullet, plat) {
-        bullet.kill();
-        //console.log(player.score);
-    }
-
-    function die(player, bot) {
-        if (player.canBeHurt) {
-            player.lives -= 1;
-            player.timeOfLastHit = game.time.totalElapsedSeconds();
-            playerHitSound.play();
-        }
-        //console.log(player.score);
-    }
-
-    function dieSpike(player,spike){
-        player.lives=0;
-    }
-
     function cameraUpdate() {
 
         //keeps in the middle of the screen always
@@ -575,7 +463,6 @@ var Play1 = function() {
         game.camera.x = player.x - SCREENSIZE / 2;
         game.camera.y = player.y - 300;
     }
-
     function turretUpdate(){
         var xdist=Math.abs(turret.x-player.x);
         var ydist=turret.y-player.y;
@@ -590,4 +477,45 @@ var Play1 = function() {
 
 
     }
+    function playerCollision() {
+        game.physics.arcade.collide(gameGroupWithPhysics.bonus, platforms);
+        game.physics.arcade.overlap(player, gameGroupWithPhysics.bonus, collect, null, this);
+        game.physics.arcade.overlap(player, gameGroupWithPhysics.bots, die, null, this);
+        game.physics.arcade.overlap(player, gameGroupWithPhysics.spikes, dieSpike, null, this);
+
+    }
+
+    /*Collision Consequences*/
+    function collect(player, bon) {
+        bon.kill();
+        player.score += 10;
+        //player.ammo = 5;
+        player.bonusCount +=1;
+        pickupSound.play();
+        //console.log(player.score);
+    }
+    function hitBot(bullet, bot) {
+        bullet.kill();
+        bot.kill();
+        player.score += 10;
+        botHitSound.play();
+        //console.log(player.score);
+    }
+    function hitWall(bullet, plat) {
+        bullet.kill();
+        //console.log(player.score);
+    }
+    function die(player, bot) {
+        if (player.canBeHurt) {
+            player.lives -= 1;
+            player.timeOfLastHit = game.time.totalElapsedSeconds();
+            playerHitSound.play();
+        }
+        //console.log(player.score);
+    }
+    function dieSpike(player,spike){
+        player.lives=0;
+    }
+
+
 }
