@@ -68,6 +68,7 @@ var Play = function() {
         drawAmmo();
         botsCreation();
         createSounds();
+        createController();
     }
     var controller,
         canJump = true;
@@ -75,7 +76,6 @@ var Play = function() {
     function update() {
         var oldLives = player.lives;
         var oldAmmo = player.ammo;
-        createController();
         playerUpdate();
         botsUpdate();
         cameraUpdate();
@@ -317,7 +317,6 @@ var Play = function() {
             obj.scale.setTo(0.75);
         }
     }
-
     function createController() {
         controller = game.input.keyboard.createCursorKeys();
         controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
