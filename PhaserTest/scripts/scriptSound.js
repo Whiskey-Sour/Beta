@@ -16,7 +16,7 @@ var Play1 = function() {
     function preload() {
         game.load.image('loose', 'assets/looseScreen.png');
         game.load.image('win', 'assets/winScreen.png');
-        game.load.image('ground', 'assets/platform.png');
+        game.load.image('ground', 'assets/platform1.png');
         game.load.image('shot', 'assets/bolt-fliped.png');
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
