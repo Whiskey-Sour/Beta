@@ -35,7 +35,7 @@ var menu = function() {
 
             $('#' + buttonIdName).on('click', function() {
                 $('#' + divIdName).remove();
-                Play1();
+                play();
             });
 
             buttonIdName = buttonsIdNames[1];
