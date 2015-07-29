@@ -212,7 +212,7 @@ var Play1 = function() {
         stepSound = game.add.audio('step');
         stepSound.volume = 0.5;
         playerHitSound = game.add.audio('playerhit');
-        themeSound.loopFull();
+        //themeSound.loopFull();
     }
     function createSpikes(){
         var spike;
@@ -369,16 +369,16 @@ var Play1 = function() {
                 //console.log(player.lastDirection);
                 player.animations.play('left');
                 player.lastDirection = -1;
-                if (!stepSound.isPlaying && player.body.touching.down) {
-                    stepSound.play();
-                }
+                /*if (!stepSound.isPlaying && player.body.touching.down) {
+                    //stepSound.play();
+                }*/
             } else if (controller.right.isDown) {
                 //  Move to the right
                 player.body.velocity.x = velocityScale;
                 player.animations.play('right');
                 player.lastDirection = 1;
                 if (!stepSound.isPlaying && player.body.touching.down) {
-                    stepSound.play();
+                    //stepSound.play();
                 }
 
             } else {
@@ -394,7 +394,7 @@ var Play1 = function() {
             if (controller.fire.isDown && timer >= 15 && player.ammo > 0) {
                 bulletPlayer();
                 timer = 0;
-                fireSound.play();
+                //fireSound.play();
             }
             timer += 1;
             //movement jump
@@ -406,7 +406,7 @@ var Play1 = function() {
             if (controller.up.isDown && player.body.touching.down && canJump) {
                 player.body.velocity.y = -300;
                 canJump = false;
-                jumpSound.play();
+                //jumpSound.play();
 
             }
             if (controller.up.isDown) {
@@ -524,14 +524,14 @@ var Play1 = function() {
         player.score += 10;
         //player.ammo = 5;
         player.bonusCount +=1;
-        pickupSound.play();
+        //pickupSound.play();
         //console.log(player.score);
     }
     function hitBot(bullet, bot) {
         bullet.kill();
         bot.kill();
         player.score += 10;
-        botHitSound.play();
+        //botHitSound.play();
         //console.log(player.score);
     }
     function hitWall(bullet, plat) {
@@ -542,7 +542,7 @@ var Play1 = function() {
         if (player.canBeHurt) {
             player.lives -= 1;
             player.timeOfLastHit = game.time.totalElapsedSeconds();
-            playerHitSound.play();
+           // playerHitSound.play();
         }
         //console.log(player.score);
     }
