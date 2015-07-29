@@ -1,5 +1,5 @@
 
-var Play1 = function() {
+var play = function() {
     var game = new Phaser.Game(CONSTANTS.screen.width, CONSTANTS.screen.height, Phaser.AUTO, '', {
         preload: preload,
         create: create,
@@ -14,14 +14,14 @@ var Play1 = function() {
     };
 
     function preload() {
-        game.load.image('loose', 'assets/looseScreen.png');
-        game.load.image('win', 'assets/winScreen.png');
+        game.load.image('loose', 'assets/loose-screen.png');
+        game.load.image('win', 'assets/win-screen.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('shot', 'assets/bolt-fliped.png');
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
         game.load.image('turret', 'assets/turret.png');
-        game.load.image('spike', 'assets/spikeplz.png');
+        game.load.image('spike', 'assets/spike.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
