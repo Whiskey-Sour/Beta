@@ -1,21 +1,21 @@
 var about = function () {
-    var $storyDiv,
+    var $storySection,
         $button;
 
-    drawSvg();
+    drawControlsSection();
 
-    $storyDiv = $('<div>').attr('id', 'story');
-    $($storyDiv).appendTo('body');
+    $storySection = $('<div>').attr('id', 'story');
+    $($storySection).appendTo('body');
 
     $button = $('<button>').attr('id', 'btn-back');
-    $($button).appendTo($storyDiv);
+    $($button).appendTo($storySection);
     $('#btn-back').on('click', function() {
         $('svg').remove();
-        $($storyDiv).remove();
+        $($storySection).remove();
         Menu();
     });
 
-    function drawSvg() {
+    function drawControlsSection() {
         var paper = Snap(800, 300),
             rectSide = 60,
             initialRectX = 160,
@@ -117,6 +117,6 @@ var about = function () {
                 fill: 'red'
             });
         bomb = paper.group(circle, bombUpper, miniRect);
-        bomb.animate({ transform: 't-560, 10' }, 2000, mina.bounce);
+        bomb.animate({ transform: 't-660, 10' }, 2000, mina.bounce);
     }
 };
