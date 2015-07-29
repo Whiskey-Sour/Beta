@@ -165,22 +165,22 @@ var Play1 = function() {
         //PlaceHolder
     }
     function SegmentOne() {
-        createLedgeWithBorders(400, 900 - 200);
-        createLedgeWithBorders(600, 900 - 350, 0.5, 1);
-        createLedgeWithBorders(0, 900 - 400);
-        createLedgeWithBorders(500, 900 - 550, 0.75, 1);
+        createLedge(400, 900 - 200, true);
+        createLedge(600, 900 - 350, true, 0.5, 1);
+        createLedge(0, 900 - 400, true);
+        createLedge(500, 900 - 550, true, 0.75, 1);
     }
     function SegmentTwo() {
-        createLedgeWithBorders(800, 850, 2, 1);
+        createLedge(800, 850, true, 2, 1);
 
     }
     function SegmentThree() {
-        createLedge(1700,700,0.2,0.4);
-        createLedge(1750,500,0.2,0.4);
-        createLedge(1900,600,0.2,0.4);
-        createLedge(1900,300,0.2,0.4);
-        createLedge(2000,450,0.4,0.4);
-        createLedge(2400,700,0.4,0.4);
+        createLedge(1700, 700, false, 0.2, 0.4);
+        createLedge(1750, 500, false, 0.2, 0.4);
+        createLedge(1900, 600, false, 0.2, 0.4);
+        createLedge(1900, 300, false, 0.2, 0.4);
+        createLedge(2000, 450, false, 0.4, 0.4);
+        createLedge(2400, 700, false, 0.4, 0.4);
 
     }
     function createPlatforms() {
@@ -275,7 +275,7 @@ var Play1 = function() {
         return bullet;
         //return bullet;
     }
-    function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
+    function createLedge(ledgeX, ledgeY, putBorders, scaleX, scaleY) {
         var platformOriginalWidth = 400,
             platformOriginalHeight = 32,
             borderOriginalWidth = 22,
@@ -292,24 +292,26 @@ var Play1 = function() {
         ledge.body.immovable = true;
         ledge.scale.setTo(scaleX, scaleY);
 
-        ledgeWidth = platformOriginalWidth * scaleX;
-        ledgeHeight = platformOriginalHeight * scaleY;
+        if (putBorders) {
+            ledgeWidth = platformOriginalWidth * scaleX;
+            ledgeHeight = platformOriginalHeight * scaleY;
 
-        borderY = ledgeY - ledgeHeight;
+            borderY = ledgeY - ledgeHeight;
 
-        borderLeft = gameGroupWithPhysics.botBoundaries.create(ledgeX - borderOriginalWidth, borderY, 'border');
-        borderLeft.body.immovable = true;
-        borderLeft.renderable = false;
+            borderLeft = gameGroupWithPhysics.botBoundaries.create(ledgeX - borderOriginalWidth, borderY, 'border');
+            borderLeft.body.immovable = true;
+            borderLeft.renderable = false;
 
-        borderRight = gameGroupWithPhysics.botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
-        borderRight.body.immovable = true;
-        borderRight.renderable = false;
+            borderRight = gameGroupWithPhysics.botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
+            borderRight.body.immovable = true;
+            borderRight.renderable = false;
+        }
     }
-    function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
-        var ledge = gameGroupWithPhysics.platforms.create(ledgeX, ledgeY, 'ground');
-        ledge.body.immovable = true;
-        ledge.scale.setTo(scaleX, scaleY);
-    }
+    //function createLedge(ledgeX, ledgeY, scaleX, scaleY) {
+    //    var ledge = gameGroupWithPhysics.platforms.create(ledgeX, ledgeY, 'ground');
+    //    ledge.body.immovable = true;
+    //    ledge.scale.setTo(scaleX, scaleY);
+    //}
     function createBot(x, y, dir) {
 
         var bot = game.add.sprite(x, y, 'robot');
