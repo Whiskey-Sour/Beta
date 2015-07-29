@@ -102,6 +102,7 @@ var Play1 = function() {
             player.kill();
             playerDeathSound.play();
             game.destroy();
+            Menu();
         }
        // console.log(player.x);
         //console.log(
@@ -209,7 +210,7 @@ var Play1 = function() {
     }
     function createPlayer() {
         //sprite: placeHolder
-        player = game.add.sprite(200, game.world.height - 150, 'john');
+        player = game.add.sprite(2800, game.world.height - 150, 'john');
         //physics
         game.physics.arcade.enable(player);
 
@@ -245,10 +246,19 @@ var Play1 = function() {
     }
 
     /* Single Object Creators*/
-    function bullet() {
-        var bullet = gameGroupWithPhysics.bullets.create(player.x + 30 * player.lastDirection, player.y, 'shot');
+    function bulletPlayer() {
+        var bullet = gameGroupWithPhysics.bullets.create(player.x + 50 * player.lastDirection, player.y, 'shot');
         game.physics.arcade.enable(bullet);
         bullet.body.velocity.x = 300 * player.lastDirection;
+        player.ammo -= 1;
+        return bullet;
+        //return bullet;
+    }
+    function bulletTurret() {
+        var bullet = gameGroupWithPhysics.bullets.create(turret.x - 30, turret.y, 'shot');
+        game.physics.arcade.enable(bullet);
+        bullet.body.velocity.y = -300*Math.sin(turret.angle*Math.PI/180);
+        bullet.body.velocity.x = -300*Math.cos(turret.angle*Math.PI/180);
         player.ammo -= 1;
         return bullet;
         //return bullet;
@@ -370,7 +380,7 @@ var Play1 = function() {
             }
 
             if (controller.fire.isDown && timer >= 15 && player.ammo > 0) {
-                bullet();
+                bulletPlayer();
                 timer = 0;
                 fireSound.play();
             }
@@ -427,9 +437,10 @@ var Play1 = function() {
     function bulletsUpdate() {
         game.physics.arcade.collide(gameGroupWithPhysics.bullets, gameGroupWithPhysics.platforms);
         game.physics.arcade.overlap(gameGroupWithPhysics.bullets, gameGroupWithPhysics.bots, hitBot, null, this);
+        game.physics.arcade.overlap(player, gameGroupWithPhysics.bullets, die, null, this);
         game.physics.arcade.overlap(gameGroupWithPhysics.platforms, gameGroupWithPhysics.bots, hitWall, null, this);
         for (var i in gameGroupWithPhysics.bullets.children) {
-            if (gameGroupWithPhysics.bullets.children[i].body.touching.left || gameGroupWithPhysics.bullets.children[i].body.touching.right) {
+            if (gameGroupWithPhysics.bullets.children[i].body.touching.left || gameGroupWithPhysics.bullets.children[i].body.touching.right ||  gameGroupWithPhysics.bullets.children[i].body.touching.down) {
                 gameGroupWithPhysics.bullets.children[i].kill();
             }
         }
@@ -461,17 +472,28 @@ var Play1 = function() {
         game.camera.x = player.x - SCREENSIZE / 2;
         game.camera.y = player.y - 300;
     }
+
+    var timeOfLastShotT=0;
+    var reloadTime=1;
     function turretUpdate(){
+        console.log(game.time.totalElapsedSeconds());
         var xdist=Math.abs(turret.x-player.x);
         var ydist=turret.y-player.y;
         //console.log(xdist);
 
         var angle=Math.atan(ydist/xdist)*180/Math.PI;
 
-        console.log(angle);
-        turret.angle=angle-10;
+        turret.angle=angle;
+        if(timeOfLastShotT+reloadTime<= game.time.totalElapsedSeconds()){
+            bulletTurret();
+            timeOfLastShotT=game.time.totalElapsedSeconds();
+        }
+
+        turret.angle=angle-10.1;
 
         //var
+
+
 
 
     }
@@ -482,6 +504,7 @@ var Play1 = function() {
         game.physics.arcade.overlap(player, gameGroupWithPhysics.spikes, dieSpike, null, this);
 
     }
+
 
     /*Collision Consequences*/
     function collect(player, bon) {
