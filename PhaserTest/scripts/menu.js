@@ -1,9 +1,8 @@
-var Menu = function() {
+var menu = function() {
         var divIdName = 'game-menu',
             buttonsIdNames = ['btn-play', 'btn-about'],
             buttonsIdNamesLen = buttonsIdNames.length;
 
-        // document.body.onload = addMenu;
         addMenu();
 
         function addMenu () {
@@ -41,8 +40,6 @@ var Menu = function() {
 
             buttonIdName = buttonsIdNames[1];
             $('#' + buttonIdName).on('click', function() {
-                // probably should remove div from DOM
-                // Show About
                 $('#' + divIdName).remove();
                 about();
             });

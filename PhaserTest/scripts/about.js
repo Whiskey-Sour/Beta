@@ -1,27 +1,39 @@
-var about = function() {
-    var $storyDiv,
-        $button;
+var about = function () {
+    var $storySection,
+        $button,
+        storyContent,
+        $storySubsection;
 
-    drawSvg();
+    drawControlsSection();
 
-    $storyDiv = $('<div>').attr('id', 'story');
-    $($storyDiv).appendTo('body');
+    $storySection = $('<div>').attr('id', 'story');
+    $($storySection).appendTo('body');
+
+    storyContent = 'The trainers at Telerik Academy thought it would be fun to have some robots running around the building. '
+        + 'Unfortunately, things got out of hand and now the only one left is a young apprentice called John. '
+        + 'In order to stop the robots he must learn how to code. Help him collect all JavaScript logos!';
+
+    $storySubsection = $('<p/>')
+        .attr('id', 'story-subsection')
+        .text(storyContent);
+
+    $($storySubsection).appendTo($storySection);
 
     $button = $('<button>').attr('id', 'btn-back');
-    $($button).appendTo($storyDiv);
+    $($button).appendTo($storySection);
     $('#btn-back').on('click', function() {
         $('svg').remove();
-        $($storyDiv).remove();
-        Menu();
+        $($storySection).remove();
+        menu();
     });
 
-    function drawSvg() {
-        var paper = Snap(800, 500),
+    function drawControlsSection() {
+        var paper = Snap(CONSTANTS.screen.width, CONSTANTS.screen.height / 2),
             rectSide = 60,
             initialRectX = 160,
             initialRectY = 110,
-            text,
-            timing,
+            transformingMatrix = new Snap.Matrix(),
+            header,
             moveText,
             spaceText,
             fireText,
@@ -39,34 +51,22 @@ var about = function() {
             bombUpper,
             miniRect;
 
-        paper.rect(0, 0, 800, 500)
+        paper.rect(0, 0, CONSTANTS.screen.width, CONSTANTS.screen.height / 2)
             .attr({
                 fill: '#CCC',
                 opacity: 0.5
             });
-        //Animate title about
-        text = 'about';
-        timing = 750;
-        (function() {
-            var svgTextElement = paper.text(350, 80, text).attr({
-                fontSize: '120px',
-                opacity: 0,
-                fill: '#72BF44',
-                stroke: 'black',
-                strokeWidth: 2,
-                textAnchor: "middle"
+
+        header = paper.text(30, 50, 'About')
+            .attr({
+                fontSize: 45,
+                fontFamily: 'Times New Roman',
+                fill: '#72BF44'
             });
 
-            setTimeout(function() {
-                Snap.animate(0, 1, function(value) {
-
-                    svgTextElement.attr({
-                        'font-size': value * 100,
-                        opacity: value
-                    });
-                }, timing, mina.bounce);
-            }, timing);
-        }());
+        transformingMatrix.translate(100, 100);
+        transformingMatrix.rotate(90, 0, 0);
+        header.animate({transform: transformingMatrix}, 2000, mina.bounce);
 
         rectUpperArrow = paper.rect(initialRectX, initialRectY, rectSide, rectSide);
         arrowUp = paper.path('M190 120 L190 160 M190 120 L170 140 M190 120 L210 140')
@@ -79,7 +79,6 @@ var about = function() {
                 x: initialRectX - (rectSide + 4),
                 y: initialRectY + rectSide
             });
-
         arrowLeft = paper.path('M106 200 L146 200 M106 200 L126 180 M106 200 L126 220')
             .attr({
                 stroke: 'black'
@@ -90,7 +89,6 @@ var about = function() {
                 x: initialRectX + (rectSide + 4),
                 y: initialRectY + rectSide
             });
-
         arrowRight = paper.path('M235 200 L275 200 L255 180 M275 200 L255 220')
             .attr({
                 fill: 'none',
@@ -124,24 +122,13 @@ var about = function() {
                 fill: '#72BF44'
             });
 
-        circle = paper.circle(765, 50, 20);
-        bombUpper = paper.rect(760, 26, 13, 8);
-        miniRect = paper.rect(764, 21, 5, 8)
+        circle = paper.circle(735, 40, 18);
+        bombUpper = paper.rect(730, 17, 10, 6);
+        miniRect = paper.rect(734, 10, 2, 5)
             .attr({
                 fill: 'red'
             });
-
-        bomb = paper.group(circle, bombUpper, miniRect)
-            .animate({
-                transform: 't-560, 10'
-            }, 2000, mina.bounce);
-
-        bomb.clone()
-            .attr({
-                x: 300
-            })
-            .animate({
-                transform: 't-265, 10'
-            }, 2000, mina.bounce);
+        bomb = paper.group(circle, bombUpper, miniRect);
+        bomb.animate({ transform: 't-660, 10' }, 2000, mina.bounce);
     }
 };

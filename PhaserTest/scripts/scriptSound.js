@@ -1,6 +1,6 @@
 
 var Play1 = function() {
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
+    var game = new Phaser.Game(CONSTANTS.screen.width, CONSTANTS.screen.height, Phaser.AUTO, '', {
         preload: preload,
         create: create,
         update: update
@@ -11,12 +11,12 @@ var Play1 = function() {
             this[groupName].enableBody=true;
         }
     };
-    var SCREENSIZE = 800;
+
 
     function preload() {
         game.load.image('loose', 'assets/looseScreen.png');
         game.load.image('win', 'assets/winScreen.png');
-        game.load.image('ground', 'assets/platform1.png');
+        game.load.image('ground', 'assets/platform.png');
         game.load.image('shot', 'assets/bolt-fliped.png');
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
@@ -98,7 +98,7 @@ var Play1 = function() {
             game.world.bringToTop(looseSscreen);
             window.setTimeout(function(){
                 game.destroy();
-                Menu();
+                menu();
             },2500);
 
 
@@ -112,7 +112,7 @@ var Play1 = function() {
             game.world.bringToTop(winScreen);
             window.setTimeout(function(){
                 game.destroy();
-                Menu();
+                menu();
             },2500);
         }
        // console.log(player.x);
@@ -477,13 +477,13 @@ var Play1 = function() {
     function cameraUpdate() {
 
         //keeps in the middle of the screen always
-        if (game.camera.x < SCREENSIZE / 2) {
+        if (game.camera.x < CONSTANTS.screen.width / 2) {
             game.camera.x = 0;
         } //left most camera
-        if (game.camera.x > SCREENSIZE * 3 - SCREENSIZE / 2) {
-            game.camera.x = SCREENSIZE * 3 - SCREENSIZE / 2;
+        if (game.camera.x > CONSTANTS.screen.width * 3 - CONSTANTS.screen.width / 2) {
+            game.camera.x = CONSTANTS.screen.width * 3 - CONSTANTS.screen.width / 2;
         } //right most camera
-        game.camera.x = player.x - SCREENSIZE / 2;
+        game.camera.x = player.x - CONSTANTS.screen.width / 2;
         game.camera.y = player.y - 300;
     }
 

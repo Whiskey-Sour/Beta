@@ -1,9 +1,4 @@
-/*TODO get rid of all unnecessary tags*/
-
-html, body, div, span, iframe,
-h1, h2, h3, h4, h5, h6, p, img, ol, ul, li,
-form, label, article, aside,
-footer, header, nav, section {
+html, body, div, span, p, img {
     margin:0;
     padding:0;
     border:0;
@@ -16,6 +11,7 @@ footer, header, nav, section {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 body {
     line-height:1;
 }

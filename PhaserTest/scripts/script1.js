@@ -2,7 +2,7 @@
 // Example:
 // if (winLooseCondition) {
 //  game.destroy();
-//  Menu();
+//  menu();
 // }
 // Remark: this code produces TypeError in browser: Cannot read property 'keyboard' of null
 //  still, it works
