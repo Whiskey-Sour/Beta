@@ -38,15 +38,11 @@ body {
 }
 
 #btn-play {
-    top: 280px;
-}
-
-#btn-highscores {
-    top: 370px;
+    top: 310px;
 }
 
 #btn-about {
-    top: 460px;
+    top: 430px;
 }
 
 #story {

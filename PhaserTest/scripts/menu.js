@@ -1,6 +1,6 @@
 var Menu = function() {
         var divIdName = 'game-menu',
-            buttonsIdNames = ['btn-play', 'btn-highscores', 'btn-about'],
+            buttonsIdNames = ['btn-play', 'btn-about'],
             buttonsIdNamesLen = buttonsIdNames.length;
 
         // document.body.onload = addMenu;
@@ -40,12 +40,6 @@ var Menu = function() {
             });
 
             buttonIdName = buttonsIdNames[1];
-            $('#' + buttonIdName).on('click', function() {
-                // probably should remove div from DOM
-                // Show High scores
-            });
-
-            buttonIdName = buttonsIdNames[2];
             $('#' + buttonIdName).on('click', function() {
                 // probably should remove div from DOM
                 // Show About
