@@ -67,7 +67,7 @@ var about = function() {
                 }, timing, mina.bounce);
             }, timing);
         }());
-        
+
         rectUpperArrow = paper.rect(initialRectX, initialRectY, rectSide, rectSide);
         arrowUp = paper.path('M190 120 L190 160 M190 120 L170 140 M190 120 L210 140')
             .attr({
@@ -130,9 +130,18 @@ var about = function() {
             .attr({
                 fill: 'red'
             });
-        bomb = paper.group(circle, bombUpper, miniRect);
-        bomb.animate({
-            transform: 't-560, 10'
-        }, 2000, mina.bounce);
+
+        bomb = paper.group(circle, bombUpper, miniRect)
+            .animate({
+                transform: 't-560, 10'
+            }, 2000, mina.bounce);
+
+        bomb.clone()
+            .attr({
+                x: 300
+            })
+            .animate({
+                transform: 't-265, 10'
+            }, 2000, mina.bounce);
     }
 };
