@@ -1,11 +1,3 @@
-// after some win/loose condition is fulfilled game is destroyed and Menu is called again
-// Example:
-// if (winLooseCondition) {
-//  game.destroy();
-//  Menu();
-// }
-// Remark: this code produces TypeError in browser: Cannot read property 'keyboard' of null
-//  still, it works
 
 var Play1 = function() {
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
@@ -22,13 +14,12 @@ var Play1 = function() {
     var SCREENSIZE = 800;
 
     function preload() {
-        game.load.image('sky', 'assets/sky.png');
+        game.load.image('loose', 'assets/looseScreen.png');
+        game.load.image('win', 'assets/winScreen.png');
         game.load.image('ground', 'assets/platform.png');
-        game.load.image('star', 'assets/star.png');
         game.load.image('shot', 'assets/bolt-fliped.png');
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
-        game.load.image('diamond', 'assets/diamond.png');
         game.load.image('turret', 'assets/turret.png');
         game.load.image('spike', 'assets/spikeplz.png');
         game.load.image('firstaid', 'assets/firstaid.png');
@@ -50,6 +41,8 @@ var Play1 = function() {
     var worldHeight = 900,
         platforms,
         background,
+        looseSscreen,
+        winScreen,
         player,
         velocityScale = 175,
         jumpSound,
@@ -59,7 +52,6 @@ var Play1 = function() {
         pickupSound,
         playerDeathSound,
         stepSound,
-        //spikes,
         playerHitSound,
         turret;
 
@@ -101,8 +93,27 @@ var Play1 = function() {
         if (player.alive && player.lives <= 0) {
             player.kill();
             playerDeathSound.play();
-            game.destroy();
-            Menu();
+            looseSscreen= game.add.sprite(0,300,'loose');
+            player.x=0;
+            game.world.bringToTop(looseSscreen);
+            window.setTimeout(function(){
+                game.destroy();
+                Menu();
+            },2500);
+
+
+        }
+
+        if(player.bonusCount===4){
+            player.kill();
+            playerDeathSound.play();
+            winScreen = game.add.sprite(0,300,'win');
+            player.x=0;
+            game.world.bringToTop(winScreen);
+            window.setTimeout(function(){
+                game.destroy();
+                Menu();
+            },2500);
         }
        // console.log(player.x);
         //console.log(
@@ -189,6 +200,7 @@ var Play1 = function() {
         var codeBonus1 = gameGroupWithPhysics.bonus.create(700, 900 - 600, 'key');
         var codeBonus2 = gameGroupWithPhysics.bonus.create(1200, 800, 'key');
         var codeBonus3 = gameGroupWithPhysics.bonus.create(1920, 250, 'key');
+        var codeBonus4 = gameGroupWithPhysics.bonus.create(3100, 750, 'key');
     }
     function createSounds() {
         jumpSound = game.add.audio('jump');
@@ -210,7 +222,7 @@ var Play1 = function() {
     }
     function createPlayer() {
         //sprite: placeHolder
-        player = game.add.sprite(2800, game.world.height - 150, 'john');
+        player = game.add.sprite(200, game.world.height - 150, 'john');
         //physics
         game.physics.arcade.enable(player);
 
@@ -474,9 +486,9 @@ var Play1 = function() {
     }
 
     var timeOfLastShotT=0;
-    var reloadTime=1;
+    var reloadTime=2;
     function turretUpdate(){
-        console.log(game.time.totalElapsedSeconds());
+
         var xdist=Math.abs(turret.x-player.x);
         var ydist=turret.y-player.y;
         //console.log(xdist);
@@ -484,7 +496,7 @@ var Play1 = function() {
         var angle=Math.atan(ydist/xdist)*180/Math.PI;
 
         turret.angle=angle;
-        if(timeOfLastShotT+reloadTime<= game.time.totalElapsedSeconds()){
+        if(timeOfLastShotT+reloadTime<= game.time.totalElapsedSeconds() && xdist<1000){
             bulletTurret();
             timeOfLastShotT=game.time.totalElapsedSeconds();
         }
