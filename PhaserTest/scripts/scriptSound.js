@@ -59,7 +59,7 @@ var Play = function() {
         playerDeathSound,
         stepSound,
         playerHitSound;
-
+        
     function create() {
         createWorld();
         createAllGroups();
@@ -173,6 +173,7 @@ var Play = function() {
     }
 
     function createSounds() {
+        game.sound.volume = 0.5;
         jumpSound = game.add.audio('jump');
         fireSound = game.add.audio('fire');
         botHitSound = game.add.audio('bothit');
@@ -296,8 +297,28 @@ var Play = function() {
         playerAmmo.enableBody = true;
     }
 
+    function createController() {
+        controller = game.input.keyboard.createCursorKeys();
+        controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        controller.mute = game.input.keyboard.addKey(Phaser.Keyboard.M);
+        controller.volumeUp = game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
+        controller.volumeDown = game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_SUBTRACT);
+    }
+
     function createEvents() {
-        controller.mute.onDown.add(muteSound);
+        controller.mute.onDown.add(muteSound, this);
+        controller.volumeUp.onDown.add(function() {
+            if (game.sound.volume < 1) {
+                game.sound.volume += 0.05;
+                console.log(game.sound.volume);
+            }
+        }, this);
+        controller.volumeDown.onDown.add(function() {
+            if (game.sound.volume > 0) {
+                game.sound.volume -= 0.05;
+                console.log(game.sound.volume);
+            }
+        }, this);
     }
 
     function drawHearts() {
@@ -315,11 +336,6 @@ var Play = function() {
         }
     }
 
-    function createController() {
-        controller = game.input.keyboard.createCursorKeys();
-        controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        controller.mute = game.input.keyboard.addKey(Phaser.Keyboard.M);
-    }
     var timer = 0;
     var reload = 5;
 
