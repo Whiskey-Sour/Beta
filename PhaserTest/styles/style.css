@@ -50,7 +50,18 @@ body {
     top: 300px;
     width: 800px;
     height: 300px;
+    padding: 15px;
     background-color: #E6E6E6;
+}
+
+#story-subsection {
+    font-family: 'Times New Roman';
+    font-size: 25px;
+    font-weight: 900;
+    line-height: 150%;
+    text-align: justify;
+    color: #000;
+    opacity: 0.8;
 }
 
 #btn-back {

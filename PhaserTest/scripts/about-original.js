@@ -1,11 +1,23 @@
 var about = function () {
     var $storySection,
-        $button;
+        $button,
+        storyContent,
+        $storySubsection;
 
     drawControlsSection();
 
     $storySection = $('<div>').attr('id', 'story');
     $($storySection).appendTo('body');
+
+    storyContent = 'The trainers at Telerik Academy thought it would be fun to have some robots running around the building. '
+        + 'Unfortunately, things got out of hand and now the only one left is a young apprentice called John. '
+        + 'In order to stop the robots he must learn how to code. Help him collect all JavaScript logos!';
+
+    $storySubsection = $('<p/>')
+        .attr('id', 'story-subsection')
+        .text(storyContent);
+
+    $($storySubsection).appendTo($storySection);
 
     $button = $('<button>').attr('id', 'btn-back');
     $($button).appendTo($storySection);
