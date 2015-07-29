@@ -69,6 +69,7 @@ var Play = function() {
         botsCreation();
         createSounds();
         createController();
+        createEvents();
     }
     var controller,
         canJump = true;
@@ -136,7 +137,6 @@ var Play = function() {
         background.alpha = 1;
 
         //PlaceHolder
-
     }
 
     function createPlatforms() {
@@ -157,8 +157,6 @@ var Play = function() {
         SegmentOne();
         SegmentTwo();
         //addPlatforms: to be implemented
-
-
     }
 
     function createBonus() {
@@ -196,7 +194,6 @@ var Play = function() {
         //return bullet;
     }
 
-
     function SegmentOne() {
         createLedgeWithBorders(400, 900 - 200);
         createLedgeWithBorders(600, 900 - 350, 0.5, 1);
@@ -206,7 +203,6 @@ var Play = function() {
 
     function SegmentTwo() {
         createLedgeWithBorders(800, 850, 2, 1);
-
     }
 
     function createLedgeWithBorders(ledgeX, ledgeY, scaleX, scaleY) {
@@ -266,7 +262,6 @@ var Play = function() {
         player.timeOfLastHit = game.time.totalElapsedSeconds();
         player.immortalTime = 1.5;
         player.canBeHurt = true; // test value
-
     }
 
     function createBot(x, y, dir) {
@@ -284,7 +279,6 @@ var Play = function() {
         // bot.size=32;
         bot.direction = dir;
         bots.add(bot);
-
     }
 
     function createBots() {
@@ -295,12 +289,15 @@ var Play = function() {
     function createHearts() {
         lives = game.add.group();
         lives.enableBody = true;
-
     }
 
     function createAmmoIndicator() {
         playerAmmo = game.add.group();
         playerAmmo.enableBody = true;
+    }
+
+    function createEvents() {
+        controller.mute.onDown.add(muteSound);
     }
 
     function drawHearts() {
@@ -317,9 +314,11 @@ var Play = function() {
             obj.scale.setTo(0.75);
         }
     }
+
     function createController() {
         controller = game.input.keyboard.createCursorKeys();
         controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        controller.mute = game.input.keyboard.addKey(Phaser.Keyboard.M);
     }
     var timer = 0;
     var reload = 5;
@@ -504,5 +503,9 @@ var Play = function() {
         } //right most camera
         game.camera.x = player.x - SCREENSIZE / 2;
         game.camera.y = player.y - 300;
+    }
+
+    function muteSound() {
+        game.sound.mute = !game.sound.mute;
     }
 }
