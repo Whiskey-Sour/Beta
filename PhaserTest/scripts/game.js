@@ -22,6 +22,7 @@ var play = function() {
         game.load.image('spike', 'assets/spike.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
+        game.load.image('turret', 'assets/turret.png');
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
