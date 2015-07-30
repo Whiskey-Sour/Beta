@@ -59,6 +59,7 @@ var play = function() {
         createSpikes();
         createBonusTokens();
         createTurret();
+        createController();
         gameGroupWithPhysics.add('Jimmy');
     }
 
@@ -66,7 +67,6 @@ var play = function() {
         var oldLives = player.lives;
         var oldAmmo = player.ammo;
 
-        createController();
         playerUpdate();
         botsUpdate();
         cameraUpdate();
