@@ -23,18 +23,10 @@ var play = function() {
         game.load.image('spike', 'assets/spike.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
-        //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
-       /* game.load.audio('jump', 'assets/audio/spaceman.wav');
-        game.load.audio('fire', 'assets/audio/pistol.wav');
-        game.load.audio('bothit', 'assets/audio/sentry_explode.wav');
-        game.load.audio('theme', 'assets/audio/HonkyTonkVillai2.ogg');
-        game.load.audio('pickup', 'assets/audio/p-ping.mp3');
-        game.load.audio('playerdeath', 'assets/audio/player_death.wav');
-        game.load.audio('step', 'assets/audio/0085-1.ogg');
-        game.load.audio('playerhit', 'assets/audio/player_hit.wav');*/
+
     }
 
     var worldHeight = 900,
@@ -114,9 +106,6 @@ var play = function() {
                 menu();
             }, 2500);
         }
-       // console.log(player.x);
-        //console.log(
-        // player.body.gravity.y);
     }
 
 
@@ -162,7 +151,7 @@ var play = function() {
         background.scale.setTo(3, 1.1);
         background.alpha = 1;
 
-        //PlaceHolder
+
     }
 
     function SegmentOne() {
@@ -194,7 +183,7 @@ var play = function() {
         SegmentOne();
         SegmentTwo();
         SegmentThree();
-        //addPlatforms: to be implemented
+
     }
 
     function createBonusTokens(){
@@ -214,7 +203,7 @@ var play = function() {
         stepSound = game.add.audio('step');
         stepSound.volume = 0.5;
         playerHitSound = game.add.audio('playerhit');
-        //themeSound.loopFull();
+
     }
 
     function createSpikes(){
@@ -272,7 +261,7 @@ var play = function() {
         bullet.body.velocity.x = 300 * player.lastDirection;
         player.ammo -= 1;
         return bullet;
-        //return bullet;
+
     }
 
     function bulletTurret() {
@@ -363,7 +352,6 @@ var play = function() {
             if (player.body.touching.down) {
                 player.body.velocity.x = 0;
                 player.body.gravity.x = 0;
-                //player.body.gravity.y=500
             }
 
             //movement left/right
@@ -373,16 +361,12 @@ var play = function() {
                 //console.log(player.lastDirection);
                 player.animations.play('left');
                 player.lastDirection = -1;
-                /*if (!stepSound.isPlaying && player.body.touching.down) {
-                    //stepSound.play();
-                }*/
             } else if (controller.right.isDown) {
                 //  Move to the right
                 player.body.velocity.x = velocityScale;
                 player.animations.play('right');
                 player.lastDirection = 1;
                 if (!stepSound.isPlaying && player.body.touching.down) {
-                    //stepSound.play();
                 }
 
             } else {
@@ -397,7 +381,7 @@ var play = function() {
             if (controller.fire.isDown && timer >= 15 && player.ammo > 0) {
                 bulletPlayer();
                 timer = 0;
-                //fireSound.play();
+
             }
             timer += 1;
             //movement jump
@@ -409,7 +393,7 @@ var play = function() {
             if (controller.up.isDown && player.body.touching.down && canJump) {
                 player.body.velocity.y = -300;
                 canJump = false;
-                //jumpSound.play();
+
 
             }
             if (controller.up.isDown) {
@@ -495,7 +479,7 @@ var play = function() {
     function turretUpdate(){
         var xdist=Math.abs(turret.x-player.x);
         var ydist=turret.y-player.y;
-        //console.log(xdist);
+
 
         var angle=Math.atan(ydist/xdist)*180/Math.PI;
 
@@ -506,7 +490,7 @@ var play = function() {
         }
 
         turret.angle=angle-10.1;
-        //var
+
     }
 
     function playerCollision() {
@@ -520,32 +504,28 @@ var play = function() {
     function collect(player, bon) {
         bon.kill();
         player.score += 10;
-        //player.ammo = 5;
+
         player.bonusCount +=1;
-        //pickupSound.play();
-        //console.log(player.score);
+
     }
 
     function hitBot(bullet, bot) {
         bullet.kill();
         bot.kill();
         player.score += 10;
-        //botHitSound.play();
-        //console.log(player.score);
+
     }
 
     function hitWall(bullet, plat) {
         bullet.kill();
-        //console.log(player.score);
+
     }
 
     function die(player, bot) {
         if (player.canBeHurt) {
             player.lives -= 1;
             player.timeOfLastHit = game.time.totalElapsedSeconds();
-           // playerHitSound.play();
         }
-        //console.log(player.score);
     }
 
     function dieSpike(player, spike){
