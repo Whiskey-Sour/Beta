@@ -20,11 +20,10 @@ var play = function() {
         game.load.image('shot', 'assets/bolt-fliped.png');
         game.load.image('ammo', 'assets/bolt.png');
         game.load.image('key', 'assets/js1.png');
-        game.load.image('turret', 'assets/turret.png');
         game.load.image('spike', 'assets/spike.png');
         game.load.image('firstaid', 'assets/firstaid.png');
         game.load.image('background', 'assets/background-new.png');
-        game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
