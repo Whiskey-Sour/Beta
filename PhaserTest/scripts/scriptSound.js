@@ -1,4 +1,3 @@
-
 var play = function() {
     var game = new Phaser.Game(CONSTANTS.screen.width, CONSTANTS.screen.height, Phaser.AUTO, '', {
         preload: preload,
@@ -26,7 +25,6 @@ var play = function() {
         game.load.spritesheet('john', 'assets/john-short-new-jumpAdded.png', 158.5, 225);
         game.load.spritesheet('robot', 'assets/robot.png', 96, 202);
         game.load.spritesheet('border', 'assets/border-block.png', 22, 32);
-
     }
 
     var worldHeight = 900,
@@ -35,7 +33,7 @@ var play = function() {
         controller,
         platforms,
         background,
-        looseSscreen,
+        looseScreen,
         winScreen,
         player,
         jumpSound,
@@ -86,9 +84,9 @@ var play = function() {
         if (player.alive && player.lives <= 0) {
             player.kill();
             playerDeathSound.play();
-            looseSscreen= game.add.sprite(0,300,'loose');
+            looseScreen = game.add.sprite(0,300,'loose');
             player.x=0;
-            game.world.bringToTop(looseSscreen);
+            game.world.bringToTop(looseScreen);
             window.setTimeout(function(){
                 game.destroy();
                 menu();
@@ -107,8 +105,6 @@ var play = function() {
             }, 2500);
         }
     }
-
-
 
     /*Group Management*/
     function createAllGroups() {
@@ -132,11 +128,10 @@ var play = function() {
     function createBots() {
         var dir;
         for (var i = 0; i < 9; i += 1) {
-            dir = Math.random() >= 0.5 ? 1 : -1
+            dir = Math.random() >= 0.5 ? 1 : -1;
             createBot(800 + i * 80, 700, dir);
         }
         createBot(550, worldHeight - 650, 1);
-
     }
 
     function createWorld() {
@@ -150,8 +145,6 @@ var play = function() {
         background = game.add.sprite(0, 0, 'background');
         background.scale.setTo(3, 1.1);
         background.alpha = 1;
-
-
     }
 
     function SegmentOne() {
@@ -163,7 +156,6 @@ var play = function() {
 
     function SegmentTwo() {
         createLedge(800, 850, true, 2, 1);
-
     }
 
     function SegmentThree() {
@@ -183,7 +175,6 @@ var play = function() {
         SegmentOne();
         SegmentTwo();
         SegmentThree();
-
     }
 
     function createBonusTokens(){
@@ -203,7 +194,6 @@ var play = function() {
         stepSound = game.add.audio('step');
         stepSound.volume = 0.5;
         playerHitSound = game.add.audio('playerhit');
-
     }
 
     function createSpikes(){
@@ -215,6 +205,7 @@ var play = function() {
             spike = gameGroupWithPhysics.spikes.create(1700 + i*50, 800, 'spike');
         }
     }
+
     function createPlayer() {
         //sprite: placeHolder
         player = game.add.sprite(200, game.world.height - 150, 'john');
@@ -234,7 +225,7 @@ var play = function() {
         player.animations.add('faceRightJump', [28], 10, true);
         player.animations.add('faceLeftJump', [29], 10, true);
 
-        // additional attrbutes
+        // additional attributes
         player.scale.setTo(0.25);
         player.lives = 3;
         player.score = 0;
@@ -261,7 +252,6 @@ var play = function() {
         bullet.body.velocity.x = 300 * player.lastDirection;
         player.ammo -= 1;
         return bullet;
-
     }
 
     function bulletTurret() {
@@ -271,8 +261,8 @@ var play = function() {
         bullet.body.velocity.x = -300 * Math.cos(turret.angle*Math.PI/180);
         player.ammo -= 1;
         return bullet;
-        //return bullet;
     }
+
     function createLedge(ledgeX, ledgeY, putBorders, scaleX, scaleY) {
         var platformOriginalWidth = 400,
             platformOriginalHeight = 32,
@@ -293,13 +283,10 @@ var play = function() {
         if (putBorders) {
             ledgeWidth = platformOriginalWidth * scaleX;
             ledgeHeight = platformOriginalHeight * scaleY;
-
             borderY = ledgeY - ledgeHeight;
-
             borderLeft = gameGroupWithPhysics.botBoundaries.create(ledgeX - borderOriginalWidth, borderY, 'border');
             borderLeft.body.immovable = true;
             borderLeft.renderable = false;
-
             borderRight = gameGroupWithPhysics.botBoundaries.create(ledgeX + ledgeWidth, borderY, 'border');
             borderRight.body.immovable = true;
             borderRight.renderable = false;
@@ -308,10 +295,7 @@ var play = function() {
 
     function createBot(x, y, dir) {
         var bot = game.add.sprite(x, y, 'robot');
-
         game.physics.arcade.enable(bot);
-
-        //game.physics.arcade.collide(bot, platforms);
         bot.body.gravity.y = 500;
         bot.animations.add('left', [13, 12, 11, 10, 9], 10, true);
         bot.animations.add('right', [1, 2, 3, 4, 5, 6], 10, true);
@@ -320,7 +304,7 @@ var play = function() {
         gameGroupWithPhysics.bots.add(bot);
     }
 
-    /*Player Controlls*/
+    /*Player Controls*/
     function createController() {
         controller = game.input.keyboard.createCursorKeys();
         controller.fire = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -343,7 +327,6 @@ var play = function() {
 
     /*Update Function*/
     var timer = 0;
-    var reload = 5;
     function playerUpdate() {
         //collide with ground and platforms
         if (player.alive) {
@@ -353,12 +336,10 @@ var play = function() {
                 player.body.velocity.x = 0;
                 player.body.gravity.x = 0;
             }
-
             //movement left/right
             if (controller.left.isDown) {
                 //  Move to the left
                 player.body.velocity.x = -velocityScale;
-                //console.log(player.lastDirection);
                 player.animations.play('left');
                 player.lastDirection = -1;
             } else if (controller.right.isDown) {
@@ -366,9 +347,6 @@ var play = function() {
                 player.body.velocity.x = velocityScale;
                 player.animations.play('right');
                 player.lastDirection = 1;
-                if (!stepSound.isPlaying && player.body.touching.down) {
-                }
-
             } else {
                 //  Stand still
                 if (player.lastDirection == 1) {
@@ -377,11 +355,9 @@ var play = function() {
                     player.animations.play('faceLeft');
                 }
             }
-
             if (controller.fire.isDown && timer >= 15 && player.ammo > 0) {
                 bulletPlayer();
                 timer = 0;
-
             }
             timer += 1;
             //movement jump
@@ -393,8 +369,6 @@ var play = function() {
             if (controller.up.isDown && player.body.touching.down && canJump) {
                 player.body.velocity.y = -300;
                 canJump = false;
-
-
             }
             if (controller.up.isDown) {
                 player.body.gravity.y = 300;
@@ -413,7 +387,6 @@ var play = function() {
             if (speed > 0) {
                 player.body.gravity.x = (speed / player.body.velocity.x) * 25 * -1;
             }
-
             if (player.timeOfLastHit + player.immortalTime < game.time.totalElapsedSeconds()) {
                 player.canBeHurt = true;
             } else {
@@ -477,11 +450,9 @@ var play = function() {
     var timeOfLastShotT = 0;
     var reloadTime = 2;
     function turretUpdate(){
-        var xdist=Math.abs(turret.x-player.x);
-        var ydist=turret.y-player.y;
-
-
-        var angle=Math.atan(ydist/xdist)*180/Math.PI;
+        var xdist=Math.abs(turret.x-player.x),
+            ydist=turret.y-player.y,
+            angle=Math.atan(ydist/xdist)*180/Math.PI;
 
         turret.angle=angle;
         if(timeOfLastShotT+reloadTime<= game.time.totalElapsedSeconds() && xdist<1000){
@@ -490,7 +461,6 @@ var play = function() {
         }
 
         turret.angle=angle-10.1;
-
     }
 
     function playerCollision() {
@@ -506,19 +476,16 @@ var play = function() {
         player.score += 10;
 
         player.bonusCount +=1;
-
     }
 
     function hitBot(bullet, bot) {
         bullet.kill();
         bot.kill();
         player.score += 10;
-
     }
 
     function hitWall(bullet, plat) {
         bullet.kill();
-
     }
 
     function die(player, bot) {
